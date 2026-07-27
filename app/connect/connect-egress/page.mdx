@@ -1,0 +1,61 @@
+---
+readingTime: PT15M
+audiences: tre-operator
+---
+
+import { Steps, Callout } from "nextra/components";
+import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
+
+<DocMetadata />
+
+# Connect TRE to Data Egress Layer
+
+## Prerequisites
+
+- A deployed TRE Layer. Deployment steps can be found [here](/5s-tes-docs/connect/setup-tre/deployment-steps).
+- Access to the TRE UI.
+- Access to the Egress UI.
+- Keycloak Admin access to the `Dare-TRE` and `Data-Egress` Keycloak realms.
+  {/* TODO: add link to the guide of creating a Keycloak user */}
+
+## Steps
+
+<Steps>
+### Create TRE and Egress admin users
+
+To establish a connection between a TRE Agent and Egress, two users need to be created in the Egress Layer and the TRE Agent Keycloak realms by TRE Layer's Keycloak Admin.
+
+**1.1 Create and add a user to access the Egress from the TRE Agent**
+
+- Login to Keycloak server of TRE Layer as an admin user.
+- Navigate to the `Data-Egress` realm.
+- Create a user with the `dare-tre-admin` role.
+
+**1.2 Create and add a user to access the TRE Layer from Egress**
+
+- Login to Keycloak server of TRE Layer as an admin user.
+- Navigate to the `Dare-TRE` realm.
+- Create a user with the `dare-egress-admin` role.
+
+### Setup the connection between TRE and Egress
+
+**2.1 TRE Admin task**
+
+- Login to TRE UI with your admin credentials
+- Navigate to the `Update Data Egress Credentials` page
+- Add the username and password of the user created in the step `1.1` above.
+
+**2.2 Egress Admin task**
+
+- Login to Egress UI with your admin credentials.
+- Navigate to the `Update TRE Credentials` page.
+- Add the username and password of the user created in the step `1.2` above.
+
+<Callout type="info">
+TRE Admin can now confirm that the Connection between Data Egress and TRE Agent is successful through the health check tab in the TRE UI under `Deployment Configuration`.
+</Callout>
+</Steps>
+
+## What's next?
+
+- [Set up TRE data access](/5s-tes-docs/connect/controlling-tre-data-access)
