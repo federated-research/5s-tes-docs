@@ -7,7 +7,7 @@ export function FooterLogo() {
     return (
         <>
             <Image
-                src="/5st-docs/logo-UoN-light.png"
+                src="/5s-tes-docs/logo-UoN-light.png"
                 alt="University of Nottingham"
                 width={200}
                 height={200}
@@ -15,7 +15,7 @@ export function FooterLogo() {
             />
 
             <Image
-                src="/5st-docs/logo-UoN-dark.png"
+                src="/5s-tes-docs/logo-UoN-dark.png"
                 alt="University of Nottingham"
                 width={200}
                 height={200}
