@@ -42,7 +42,7 @@ You can find the latest releases with installation instructions [here](https://g
   Funnel is currently only available on linux and macOS.
 </Callout>
 
-<Tabs items={['Install Script', 'Build from Source', 'Homebrew', 'Manual Binary Install']}>
+<Tabs items={['Install Script', 'Build from Source']}>
  <Tabs.Tab>
    This installs the latest release candidate at the time of writing `v0.11.12`. 
     ```bash copy
@@ -54,60 +54,6 @@ You can find the latest releases with installation instructions [here](https://g
       /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/calypr/funnel/develop/install.sh)" -- "v0.11.12" "/opt/funnel"
       ```
     </Callout>
- </Tabs.Tab>
-
-<Tabs.Tab>
-  Instructions on how to build Funnel from source can be found
-  [here](https://calypr.org/tools/funnel/docs/development/developers/)
-</Tabs.Tab>
-
- <Tabs.Tab>
- The latest version available via `brew` is `v0.11.3`. 
-    ```bash copy
-    brew tap ohsu-comp-bio/formula
-
-    brew install funnel
-    ```
-
- </Tabs.Tab>
- 
- <Tabs.Tab>
-   This installs the most recent Funnel release at the time of writing `v0.11.6`.
-   <Tabs items={['MacOS', 'Linux']}>
-      <Tabs.Tab>
-         For Intel (AMD64) architecture: 
-         ```bash copy
-         wget https://github.com/ohsu-comp-bio/funnel/releases/download/v0.11.6/funnel-darwin-amd64-v0.11.6.tar.gz
-         tar -xzvf funnel-darwin-amd64-v0.11.6.tar.gz
-         sudo mv funnel /usr/local/bin/ 
-         ```
-
-         For Apple Silicon (ARM64) architecture:
-         ```bash copy
-         wget https://github.com/ohsu-comp-bio/funnel/releases/download/v0.11.6/funnel-darwin-arm64-v0.11.6.tar.gz
-         tar -xzvf funnel-darwin-arm64-v0.11.6.tar.gz
-         sudo mv funnel /usr/local/bin/
-         ```
-
-      </Tabs.Tab>
-
-      <Tabs.Tab>
-         For Intel (AMD64) architecture:
-         ```bash copy
-         wget https://github.com/ohsu-comp-bio/funnel/releases/download/v0.11.6/funnel-linux-amd64-v0.11.6.tar.gz
-         tar -xzvf funnel-linux-amd64-v0.11.6.tar.gz
-         sudo mv funnel /usr/local/bin/
-         ```
-
-         For ARM64 architecture:
-         ```bash copy
-         wget https://github.com/ohsu-comp-bio/funnel/releases/download/v0.11.6/funnel-linux-arm64-v0.11.6.tar.gz
-         tar -xzvf funnel-linux-arm64-v0.11.6.tar.gz
-         sudo mv funnel /usr/local/bin/
-         ```
-      </Tabs.Tab>
-
-   </Tabs>
  </Tabs.Tab>
 
 </Tabs>
