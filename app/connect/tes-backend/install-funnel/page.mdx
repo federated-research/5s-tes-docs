@@ -1,0 +1,143 @@
+---
+readingTime: PT45M
+audiences: tre-operator
+---
+
+import { Steps, Callout, Tabs } from "nextra/components";
+import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
+
+<DocMetadata />
+
+# Install Funnel TES Backend
+
+[Funnel](https://github.com/calypr/funnel) is an implementation of the GA4GH Task Execution Schemas. It provides an API server,
+multiple storage backends, multiple compute backends and a web UI.
+
+This guide will walk you through the process of installing Funnel and configuring it to use the TRE Layer S3 instance.
+
+<Steps>
+## Set up S3 Access key
+
+This step is required to configure Funnel to use the TRE Layer S3 instance.
+
+- Navigate to the S3 instance of the TRE Layer. It will be on the same host as the TRE Agent, at port `9002`, if you followed the example configuration. If you've configured it to be different, you'll need to use the correct port.
+
+- Login with S3 TRE root credentials (which are set up in the environment variables in the `.env` file).
+
+- To create the access keys, in the S3 (currently RustFS) console navigate to **_Access Keys -> Add Access Key_**
+
+<Callout type="info">
+  While you can log in with your KeyCloak credentials, using the option `Log in
+  with KeyCloak`, to create access keys with efficient privileges, you need to
+  log in with S3 root credentials.
+</Callout>
+
+![RustFS](/S3-RustFS.png)
+
+## Install Funnel
+
+You can find the latest releases with installation instructions [here](https://github.com/calypr/funnel/releases).
+
+<Callout type="info">
+  Funnel is currently only available on linux and macOS.
+</Callout>
+
+<Tabs items={['Install Script', 'Build from Source']}>
+ <Tabs.Tab>
+   This installs the latest release candidate at the time of writing `v0.11.12`. 
+    ```bash copy
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/calypr/funnel/develop/install.sh)" -- "v0.11.12"
+    ```
+    <Callout type="info">
+      You can add the destination of Funnel by adding it in the end of the command. For example, to install Funnel to `/opt/funnel`:
+      ```bash copy
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/calypr/funnel/develop/install.sh)" -- "v0.11.12" "/opt/funnel"
+      ```
+    </Callout>
+ </Tabs.Tab>
+
+</Tabs>
+
+## Check if funnel has been successfully installed
+
+```bash copy
+funnel --help
+```
+
+## Funnel config file
+
+Funnel will need access to the TRE layer S3 storage. Once funnel is installed, create a `config.yml` file.
+
+- `Endpoint` is where the instance of S3 in the TRE Layer is hosted.
+- `Access key` & `Secret` are created in the [previous step](#set-up-s3-access-key).
+
+```yaml filename="config.yml" copy
+GenericS3:
+  - Disabled: false
+    Endpoint: "localhost:9002" # URL to S3 API. Change to match your environment. `9002` is the default port in our deployment samples.
+    Key: "<access key>"
+    Secret: "<secret>"
+```
+
+You may also wish to configure other elements of the Funnel installation, e.g.:
+
+```yaml filename="config.yml" copy
+Server:
+  HTTPPort: "80" # Control which port Funnel binds on, default is 8000
+Worker:
+  WorkDir: "/var/opt/funnel" # explicitly specify Funnel's working directory
+# ...
+```
+
+<Callout>
+
+[Funnel's documentation](https://calypr.org/tools/funnel/docs/) offers configuration details in the relevant pages for each feature area.
+
+Funnel's own [deployment documentation](https://calypr.org/tools/funnel/docs/compute/deployment/) also offers suggested approaches to deployment.
+
+</Callout>
+## Run Funnel
+
+Run the funnel server using the config created above.
+
+```bash copy
+funnel server run -c config.yml
+```
+
+<Callout type="info">
+  You can decide the location of the config file, but the command above will
+  need to be changed to point to the correct config file location. For example,
+  if the config file is located in `/etc/funnel/`: ```bash copy funnel server
+  run -c /etc/funnel/config.yml ```
+</Callout>
+
+Optionally, to run Funnel in the background on a typical linux server, you may wish to setup a systemd service.
+
+For example, if Funnel is installed manually to `/opt/funnel/funnel`:
+
+```inf filename="funnel.service" copy
+[Unit]
+Description=Funnel Server
+
+[Service]
+ExecStart=/opt/funnel/funnel server run --config /etc/funnel/config.yml
+SyslogIdentifier=funnel
+LimitNOFILE=1000000
+RestartSec=10
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+## Access to Funnel
+
+By default, Funnel Web Dashboard can be accessed at host and port specified in the config file (`Server.HTTPPort`) with a default value of `8000`.
+
+<Callout type="warning">
+  It is strongly recommended NOT to open public internet access to Funnel
+  Dashboard and to limit the Funnel network access to specific IP addresses,
+  e.g., IP of developer's machine for debugging purposes, only.
+</Callout>
+
+</Steps>

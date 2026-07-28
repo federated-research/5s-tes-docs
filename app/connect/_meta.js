@@ -5,4 +5,5 @@ export default {
   "connect-submission": "Connecting a TRE",
   "connect-egress": "Connect TRE to Data Egress",
   "approve-outputs":"Review Outputs"
+  "tes-backend": "TES Backend",
 };
