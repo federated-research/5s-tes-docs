@@ -1,0 +1,67 @@
+---
+readingTime: PT5M
+audiences: tre-operator
+---
+
+import { Steps, Callout } from "nextra/components";
+import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
+
+<DocMetadata />
+
+# Reviewing and Approving Outputs
+
+This guide describes how an Output Checker reviews and approves data egress requests using the Egress Layer.
+
+## Prerequisites
+
+### Knowledge
+
+- Understand your organisation's output checking procedures and Standard Operating Procedures (SOPs).
+- Know how to review outputs in accordance with the project's governance and disclosure control policies.
+- Be familiar with the Five Safes TES Egress application.
+
+### Technical requirements
+
+- A deployed Egress Layer.
+- An Egress administrator account. A Keycloak administrator must create a user with the `data-egress-admin` role. See **Add Keycloak User**.
+
+## Review Output Requests
+
+<Steps>
+
+### Sign in
+
+Sign in to the Egress Layer using an account with the `data-egress-admin` role.
+
+### View Unprocessed Requests
+
+Navigate to the **Requests** page and select the **Unprocessed Requests** tab.
+
+All output requests that require review are displayed.
+
+![View Unprocessed Requests](/images/tre-layer/egress-unprocessed.png)
+
+### Review an Output Request
+
+Select the output request you want to review by clicking **Review**.
+
+Download the requested output files and review them according to your organisation's policies and procedures.
+
+![Review Request](/images/tre-layer/egress-request-review.png)
+
+### Approve or Reject Outputs
+
+For each output within the request, choose either **Approved** or **Rejected**.
+
+If you are not ready to complete the review, select **Save** to store your progress and continue reviewing later.
+
+When the review is complete, select **Complete & Close Request**.
+
+The request is returned to the **Requests** page and its status is updated (for example, **Fully Approved**).
+![Fully Approved Request](/images/tre-layer/egress-request-approved.png)
+<Callout type="info">
+Output requests can be reviewed over multiple sessions. Selecting **Save** preserves your decisions until you are ready to complete the review.
+</Callout>
+
+</Steps>
+

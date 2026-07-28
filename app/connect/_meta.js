@@ -1,6 +1,10 @@
 export default {
   "setup-tre": "Setup TRE Agent",
+  "connect-submission": "Connecting a TRE",
   approvals: "Approve Projects",
   "connect-submission": "Connecting a TRE",
   "components": "TRE Components",
+  "connect-egress": "Connect TRE to Data Egress",
+  "approve-outputs":"Review Outputs",
+  "tes-backend": "TES Backend",
 };
