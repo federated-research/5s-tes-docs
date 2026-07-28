@@ -3,8 +3,7 @@ import { Head } from "nextra/components";
 import { getPageMap } from "nextra/page-map";
 import "nextra-theme-docs/style.css";
 import "./globals.css";
-import Image from "next/image";
-import { FooterLogo } from "@/components/footer-log";
+import { FooterLogo } from "@/components/footer-logo";
 
 export const metadata = {
   // Define your metadata here
@@ -14,10 +13,15 @@ export const metadata = {
 const navbar = (
   <Navbar
     logo={<b>Five Safes TES Docs</b>}
-  // ... Your additional navbar options
+    // ... Your additional navbar options
   />
 );
-const footer = <Footer> <FooterLogo /></Footer>;
+const footer = (
+  <Footer>
+    {" "}
+    <FooterLogo />
+  </Footer>
+);
 
 export default async function RootLayout({
   children,
