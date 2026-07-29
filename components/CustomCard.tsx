@@ -26,7 +26,7 @@ export default function CustomCard({ title, links, description, CTA, icon }: { t
                     ))}
                 </ul>
             </div>
-            <a href={CTA.href} className="bg-blue-500 text-white px-4 py-2 rounded-md mt-5 block text-center hover:bg-blue-600 hover:scale-105 transition-all duration-300 ">{CTA.text}</a>
+            <a href={CTA.href} className="bg-blue-500 text-white px-4 py-2 rounded-md mt-5 flex gap-2 w-full justify-center hover:bg-blue-600 hover:scale-105 transition-all duration-300 ">{CTA.text}</a>
         </div>
     );
 }
