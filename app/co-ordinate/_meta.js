@@ -1,4 +1,5 @@
 export default {
-  setup_sub_layer: "Setup Submission Layer",
-  management: "Management",
+  // exclude routes until content published
+  // setup_sub_layer: "Setup Submission Layer",
+  // management: "Management",
 };
