@@ -1,10 +1,12 @@
+import { ReactNode } from "react";
+
 type LinksList = {
     title: string;
     href: string;
 }[];
 
 type CtaType = {
-    text: string;
+    text: ReactNode;
     href: string;
 };
 export default function CustomCard({ title, links, description, CTA, icon }: { title: string, description: string, links: LinksList, CTA: CtaType, icon: React.ReactNode }) {
