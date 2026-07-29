@@ -12,82 +12,84 @@ import CustomCard from "@/components/CustomCard";
 # Five Safes TES Documentation
 
 <div className="grid grid-cols-3 gap-4 mt-5">
-    <CustomCard
+  <CustomCard
     title="Learn"
     description="Understand the core concepts, standards, and users of Five Safes TES"
     links={[
-      { title: "What is Fives Safes TES ", href: "/link1" },
-      { title: "OMOP", href: "/link2" },
-      { title: "Personas", href: "/link1" },
-      { title: "Context C4 Diagram", href: "/link2" },
+      { title: "What is Fives Safes TES ", href: "/journeys/learn/what-is-five-safes" },
+      { title: "OMOP", href: "/journeys/learn/omop" },
+      { title: "Personas", href: "/journeys/learn/personas" },
+      { title: "System Architecture", href: "/journeys/learn/system-architecture" },
     ]}
-    CTA={{ text: <>Learn <ChevronRight /></>, href: "/cta" }}
+    CTA={{ text: <>Learn <ChevronRight /></>, href: "/journeys/learn" }}
     icon={<BookOpen size={24} />}
   />
+
   <CustomCard
     title="Connect"
     description="Learn about how TRE can operate with Five Safes TES"
     links={[
         {
-        title: "Setting up TRE Agent",
+        title: "Setup TRE Components",
         href: "/connect/setup-tre/deployment-steps",
       },
-      { title: "Connecting a TRE", href: "/connect/connect-submission" },
+      { title: "Connect a TRE", href: "/connect/connect-submission" },
       { title: "Projects and users", href: "/connect/approvals" },
-      { title: "TRE data access", href: "/link1" },
+      { title: "TRE data access", href: "/journeys/connect/tre-data-access" },
       { title: "Outputs approval", href: "/connect/approve-outputs" },
     ]}
-    CTA={{ text: <>Connect <ChevronRight /></>, href: "/cta" }}
+    CTA={{ text: <>Connect <ChevronRight /></>, href: "/journeys/connect" }}
     icon={<Unplug size={24} />}
+  />
 
-/>
+  <CustomCard
+    title="Research"
+    description="Learn about what reseachers can do with Five Safes TES"
+    links={[
+      { title: "Submit an analysis", href: "/journeys/research/submitting-an-analysis" },
+      { title: "Analysis examples", href: "/journeys/research/analysis-examples" },
+    ]}
+    CTA={{ text: <>Research <ChevronRight /></>, href: "/journeys/research" }}
+    icon={<Microscope size={24} />}
+  />
 
-<CustomCard
-  title="Research"
-  description="Learn about what reseachers can do with Five Safes TES"
-  links={[
-    { title: "Submitting an analysis", href: "/link1" },
-    { title: "Analysis examples", href: "/link2" },
-  ]}
-  CTA={{ text: <>Research <ChevronRight /></>, href: "/cta" }}
-  icon={<Microscope size={24} />}
-/>
+  <CustomCard
+    title="Co-ordinate"
+    description="Manage a consortium of TREs to deliver federated research studies"
+    links={[
+      { title: "TREs, projects and users", href: "/journeys/co-ordinate/tres-projects-and-users" },
+      { title: "Setup a Submission Layer", href: "/journeys/co-ordinate/setup-submission" },
+    ]}
+    CTA={{ text: <>Co-ordinate <ChevronRight /></>, href: "/journeys/co-ordinate" }}
+    icon={<Share2 size={24} />}
+  />
 
-    <CustomCard
+  <CustomCard
     title="Integrate"
     description="Get your innovative ideas into Five Safes TES"
     links={[
-      { title: "C4 – Containers", href: "/link1" },
-      { title: "Set up test environment", href: "/link2" },
-      { title: "Explore and test in a locally ", href: "/link1" },
-      { title: "API reference", href: "/link2" },
+      { title: "Infrastructure Architecture", href: "/journeys/integrate/infrastructure-architecture" },
+      { title: "Setup a test environment", href: "/journeys/integrate/setup-testenv" },
+      { title: "Explore and test locally", href: "/journeys/integrate/explore-and-test-locally" },
+      { title: "Submission API reference", href: "/journeys/integrate/submission-api-reference" },
+      { title: "TRE Agent API reference", href: "/journeys/integrate/tre-agent-api-reference" },
+      { title: "Egress API reference", href: "/journeys/integrate/egress-api-reference" },
     ]}
-    CTA={{ text: <>Integrate <ChevronRight /></>, href: "/cta" }}
+    CTA={{ text: <>Integrate <ChevronRight /></>, href: "/journeys/integrate" }}
     icon={<Boxes size={24} />}
 
-/>
+  />
 
-<CustomCard
-  title="Contribute"
-  description="Learn about how to contribute to Five Safes TES"
-  links={[
-    { title: "Setting up a development environment", href: "/link1" },
-    { title: "C4 context diagram", href: "/link2" },
-    { title: "C4 components", href: "/link1" },
-    { title: "Contributing guide", href: "/link2" },
-  ]}
-  CTA={{ text: <>Contribute <ChevronRight /></>, href: "/cta" }}
-  icon={<Merge size={24} />}
-/>
-<CustomCard
-  title="Co-ordinate"
-  description="Manage a consortium of TREs to deliver federated research studies"
-  links={[
-    { title: "TREs, projects and users", href: "/link1" },
-    { title: "Setting up a Submission Layer", href: "/link2" },
-  ]}
-  CTA={{ text: <>Co-ordinate <ChevronRight /></>, href: "/cta" }}
-  icon={<Share2 size={24} />}
-/>
-
+  <CustomCard
+    title="Contribute"
+    description="Learn about how to contribute to Five Safes TES"
+    links={[
+      { title: "Setup a dev environment", href: "/journeys/contribute/setup-devenv" },
+      { title: "System Architecture", href: "/journeys/contribute/system-architecture" },
+      { title: "Components Architecture", href: "/journeys/contribute/components-architecture" },
+      { title: "Contributing guide", href: "/journeys/contribute/contributing-guide" },
+    ]}
+    CTA={{ text: <>Contribute <ChevronRight /></>, href: "/journeys/contribute" }}
+    icon={<Merge size={24} />}
+  />
 </div>
