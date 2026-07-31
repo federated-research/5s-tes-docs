@@ -92,7 +92,7 @@ include:
     - DeploymentStack/TRE/docker-compose.yml
 
 services: 
-  tre-ui:
+  tre-ui:    # Matching the name of the service in the original TRE's compose manifest file
     ports: !override # To override the port of the TRE Agent UI, to 8123 in this example
       - 8123:8080
 ```
@@ -136,7 +136,7 @@ For example, the `CONFIG_PATH` for the scenario below is `../../../config` becau
 __3.1 Create a new .env file__
 
 Create a new `.env` file next to the `compose.yml` or the `docker-compose.yml` file.
-This can be based on the `DeploymentStack/TRE/.env.example` file in the repository.
+You can use the template from the `DeploymentStack/TRE/.env.example` file in the repository as a reference.
 
 
 __3.2 Configure general app settings__
@@ -193,7 +193,7 @@ You need to setup Vault and generate a root token. Run the following commands on
 Copy the generated root token and paste it into the `VaultRootToken` environment variable of the `.env` file. Also, __save the unseal key__ in a safe place to unseal the vault in the production mode.
 
 <Callout type="info">
-  After you restart the services using `docker compose up -d`, you may see the `vault` service keeps waiting. This is because the vault is not unsealed. 
+  After you restart the services using `docker compose down` and then `docker compose up -d`, you may see the `vault` service keeps waiting. This is because the vault is not unsealed. 
   To unseal the vault: On another terminal, run the following command: `docker exec -it vault vault operator unseal <UNSEAL_KEY>`.
   After a few seconds, the `vault` service should start and other services will start as well.
 </Callout>
@@ -280,8 +280,8 @@ Depending on where and how you want to deploy KeyCloak, the configuration is dif
     <Table.Tr>
       <Table.Td>`KeycloakStartupCommand`</Table.Td>
       <Table.Td>
-        The command to start the Keycloak server. In dev mode (or Demostack), this is `start-dev`.
-        In production, if you have HTTPS configured for Keycloak, this should be set to `start`.
+        The command to start the Keycloak server. If your Keycloak doesn't have `HTTPS` enabled yet, this is `start-dev`.
+        Otherwise, this should be set to `start`.
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
@@ -317,7 +317,11 @@ docker compose up -d keycloak
     - Repeat the same process for the `egress-layer.json` file to create the `Data-Egress` realm.
 
 
-The last step is using the URL of your KeyCloak server in the `.env` file as `TRE_KEYCLOAK_URL`.
+  <Callout >
+    - Remember to remove the inclusion of the `auth.yml` in the `docker-compose.yml` file since you are using a remote KeyCloak server.
+    - Use the URL of your remote KeyCloak server in the `.env` file as `TRE_KEYCLOAK_URL`.
+    - You can build the realm configuration for the TRE layer from scratch, but we don't recommend it.
+  </Callout>
 
   </Tabs.Tab>
 </Tabs>
@@ -384,31 +388,31 @@ A guide to set up SSL certs and subdomains is coming soon.
     <Table.Tr>
       <Table.Td>`TreApiPublicUrl`</Table.Td>
       <Table.Td>
-        The public URL for the TRE Agent API. For example, http://my-TRE-host:8072.
+        The public URL for the TRE Agent API. For example, https://my-TRE-host.net.
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
       <Table.Td>`TRES3ConsoleUrl`</Table.Td>
       <Table.Td>
-        Where the S3 TRE UI is hosted. For example, http://localhost:9003 or http://s3-tre-ui:9000.
+        Where the S3 TRE UI is hosted. For example, https://s3-tre-ui.net.
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
       <Table.Td>`TreKeyCloakClientUIRedirectURL`</Table.Td>
       <Table.Td>
-        The URL for the TRE UI’s Keycloak redirect URL. For example, http://host-of-tre:8989/.
+        The URL for the TRE UI's Keycloak redirect URL. For example, https://host-of-tre.net/.
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
       <Table.Td>`EgressKeyCloakClientUIRedirectURL`</Table.Td>
       <Table.Td>
-        The URL for the Egress Layer’s Keycloak redirect URL. For example, https://localhost:8100/.
+        The URL for the Egress Layer's Keycloak redirect URL. For example, https://host-of-egress.net/.
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
       <Table.Td>`KeycloakFullURL`</Table.Td>
       <Table.Td>
-        The full hostname URL of the Keycloak server, for example,http://localhost:8085 or https://my-keycloak.net. Note: This is only used if you are using a local/internal Keycloak service defined in the `ServiceStack/compose-manifests/shared/auth.yml` file.
+        The full hostname URL of the Keycloak server, for example, https://my-keycloak.net. Note: This is only used if you are using a local/internal Keycloak service defined in the `ServiceStack/compose-manifests/shared/auth.yml` file.
       </Table.Td>
     </Table.Tr>
   </tbody>
@@ -447,6 +451,14 @@ At the directory where `docker-compose.yml` or `compose.yml` and `.env` files ar
 ```bash
 docker compose up -d
 ```
+
+<Callout type="info">
+  If you encounter any issues, you can check the logs of the containers by running the following command:
+  ```bash
+  docker logs <container-name> -f
+  ```
+  Alternatively, you can check the logs of the stack by accessing port 5341 (Seq service) of the host machine.
+</Callout>
 
 </Steps>
 
