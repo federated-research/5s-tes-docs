@@ -1,6 +1,7 @@
 ---
 readingTime: PT45M
 audiences: tre-operator
+docType: guide
 ---
 
 import { Steps, Tabs, Callout, FileTree, Table } from "nextra/components";
@@ -300,7 +301,32 @@ Follow the guide below to re-generate the OpenID secrets for services to use.
   </tbody>
 </Table>
 
-__3.6 Configure URLs__
+__3.6 Add a Realm admin for service accounts creation__
+
+Follow this [guide](/co-ordinate/entity-management/add-realm-admin) to add a Realm admin for service accounts creation. Then, add the credentials to the `.env` file as `KeycloakAdmin__Username` and `KeycloakAdmin__Password`.
+
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>Environment Variable</Table.Th>
+      <Table.Th>Description</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>
+        `KeycloakAdmin__Username` and `KeycloakAdmin__Password`
+      </Table.Td>
+      <Table.Td>
+        Submission Layer KeyCloak realm admin credentials for service accounts
+        creation. Follow this
+        [guide](/co-ordinate/entity-management/add-realm-admin) to generate.
+      </Table.Td>
+    </Table.Tr>
+  </tbody>
+</Table>
+
+__3.7 Configure URLs__
 
 You can set the following URLs to the `hostname:port` address for testing, but we recommend setting up SSL certs and subdomains for the user accessible components, and then set these to the URLs with HTTPS protocol.
 A guide to set up SSL certs and subdomains is coming soon.
