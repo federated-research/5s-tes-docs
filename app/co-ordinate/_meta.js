@@ -1,4 +1,4 @@
 export default {
-  setup_sub_layer: "Setup Submission Layer",
+  "setup-sub-layer": "Setup Submission Layer",
   management: "Management",
 };
