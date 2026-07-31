@@ -6,18 +6,13 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  distDir: "out",
   output: "export",
   basePath: "",
   assetPrefix: "",
 };
 
-// Set up Nextra with its configuration
-const withNextra = nextra({
-  search: false,
-});
+const withNextra = nextra({});
 
-// Export the final Next.js config with Nextra included
 export default withNextra({
   ...nextConfig,
 });
