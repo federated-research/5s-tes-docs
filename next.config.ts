@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   },
   distDir: "out",
   output: "export",
-  basePath: "/5st-docs",
+  basePath: "",
   assetPrefix: "",
 };
 
