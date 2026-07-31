@@ -20,44 +20,36 @@ import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
 
 Here is a summary of the required components which make up the Submission Layer:
 
-| Component                    | Notes                                                                                                                                   |
-| ---------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- |
-| **KeyCloak**                 | The TRE Agent and Egress apps each require a Keycloak realm containing users and clients authorised to access them                      |
-| **S3 (e.g., MinIO, RustFS)** | An Amazon S3 compatible TRE Storage service                                                                                             |
-| **RabbitMQ**                 | A message broker used for queueing                                                                                                      |
-| **PostgreSQL**               | A database for the TRE Agent and Egress apps to keep local state                                                                        |
-| **Hashicorp Vault**          | Identity-based secrets and encryption management system used for storing TRE service account credentials                                |
-| **OpenLDAP**                 | Used to provide ephemeral credentials for Trino (if in use as a datasource)                                                             |
-| **Camunda Connectors**       | A REST API allowing other services (e.g. TRE Agent) to integrate with Camunda                                                           |
-| **Camunda Orchestration**    | A consolidated service that combines Camunda functionality via [Zeebe + Operate + Tasklist](https://camunda.com/process-orchestration/) |
-| **ElasticSearch**            | Used for Camunda's local datastore such as workflow state                                                                               |
-| **TRE-Camunda**              | A service defining the handlers for ephemeral credentials management. Registers the handlers with Camunda, via Zeebe                    |
-| **TRE Agent API**            | A REST API for TRE Agent functionality                                                                                                  |
-| **TRE Agent GUI**            | A Web Frontend for TRE Admins to log into and interact with the TRE Agent                                                               |
-| **Egress API**               | A REST API for Egress Portal functionality                                                                                              |
-| **Egress GUI**               | A Web Frontend for Egress Officers to log into and interact with the Egress Portal                                                      |
-| **TES Backend**              | A standard GA4GH TES implementation to execute the analysis                                                                             |
+| Component                                            | Notes                                                                                                    |
+| ---------------------------------------------------- | :------------------------------------------------------------------------------------------------------- |
+| **KeyCloak** (only if you use the built-in KeyCloak) | The Submission apps require a Keycloak realm containing users and clients authorised to access them      |
+| **S3 storage** (e.g., MinIO, RustFS)                 | An Amazon S3 compatible Submission Storage service                                                       |
+| **RabbitMQ**                                         | A message broker for queueing submissions for target TREs                                                |
+| **PostgreSQL**                                       | A database for the Submission apps to keep local state                                                   |
+| **Submission API**                                   | A REST API for Submission Layer functionality, including the GA4GH TES API                               |
+| **Submission GUI**                                   | A Web Frontend for users to log into and interact with the Submission Layer                              |
+| **Hashicorp Vault**                                  | Identity-based secrets and encryption management system used for storing TRE service account credentials |
 
 You may choose how to distribute your own deployment of these components, as long as they are able to communicate with each other over the network.
 
-For some components, such as KeyCloak or S3 (MinIO or RustFS), you may wish to use your own existing deployments.
+For some components, such as KeyCloak or S3 (e.g., MinIO, RustFS), you may wish to use your own existing deployments.
 
 ### User accessible components
 
 A subset of the components will need to be accessible by users, outside of the TRE Layer environment, through a reverse proxy or port forwarding:
 
-| Component         | Reason                                                                                                                                           | Sample Port \* |
-| ----------------- | :----------------------------------------------------------------------------------------------------------------------------------------------- | :------------- |
-| **KeyCloak**      | So that users can authenticate and admins can manage the TRE Agent and Egress KeyCloak Realms (if you are using the internal, built-in KeyCloak) | 8085           |
-| **TRE Agent GUI** | So that TRE Admins can log into and interact with the TRE Agent                                                                                  | 8989           |
-| **TRE Agent API** | So that TRE Agent GUI browser functionality, and optionally other services, can interact with the TRE Agent REST API                             | 8072           |
-| **Egress GUI**    | So that Egress Officers can log into and interact with the Egress Portal                                                                         | 8100           |
-| **S3 UI**         | So that Egress Officers can interact with the S3 storage through a web interface                                                                 | 9003           |
+| Component          | Reason                                                                                                                      | Sample Port \* |
+| ------------------ | :-------------------------------------------------------------------------------------------------------------------------- | :------------- |
+| **KeyCloak**       | So that users can authenticate and admins can manage the Submission KeyCloak Realm (if you are using the built-in KeyCloak) | 8085           |
+| **S3 GUI**         | So that Researchers can upload and download Submission data (inputs or outputs) through a web interface                     | 9001           |
+| **S3 API**         | So that TREs can put the analytics results into S3 storage through a REST API                                               | 9000           |
+| **Submission GUI** | So that users can log into and interact with the Submission Layer                                                           | 7220           |
+| **Submission API** | So that Researchers and TREs can interact with the Submission Layer via a REST API                                          | 5034           |
 
 **Note**: Sample ports are provided for reference only. It can be modified to reflect the your own
 infrastructure and configuration choices.
 
 <Callout>
-  If you are setting up a reverse proxy for S3 (MinIO or RustFS), the
+  If you are setting up a reverse proxy for S3 (e.g., MinIO, RustFS), the
   `Websockets Support` should be enabled for S3 GUI Proxy host.
 </Callout>
