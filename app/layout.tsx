@@ -3,7 +3,7 @@ import { Head } from "nextra/components";
 import { getPageMap } from "nextra/page-map";
 import "nextra-theme-docs/style.css";
 import "./globals.css";
-import { FooterLogo } from "@/components/footer-logo";
+import { FooterLogo } from "@/components/FooterLogo";
 
 export const metadata = {
   // Define your metadata here
