@@ -1,4 +1,4 @@
 export default {
-  "what-is-5st": "What is Five Safes TES?",
-  "personas": "Personas",
+  "what-is-five-safes-tes": "What is Five Safes TES?",
+  personas: "Personas",
 };
