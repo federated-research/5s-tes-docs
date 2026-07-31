@@ -186,13 +186,6 @@ This section contains the environment variables that are used to configure the O
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
-      <Table.Td>`SubmissionKeyCloakClientUIRedirectURL`</Table.Td>
-      <Table.Td>
-        The URL for the Submission Layer UI's Keycloak redirect URL. For example,
-        `https://submission-layer.net/`.
-      </Table.Td>
-    </Table.Tr>
-    <Table.Tr>
       <Table.Td>`SubmissionUIClientSecret`</Table.Td>
       <Table.Td>
         The OpenID secret for the Submission Layer UI Keycloak client `Dare-Control-UI`. Find and
@@ -208,6 +201,13 @@ This section contains the environment variables that are used to configure the O
         and regenerate this secret by navigating to `Dare-Control` realm ->
         `Clients` -> `Dare-Control-API` -> `Credentials`. Then click `Regenerate`
         and copy the new value into this environment variable.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`SubmissionKeyCloakClientUIRedirectURL`</Table.Td>
+      <Table.Td>
+        The URL for the Submission Layer UI's Keycloak redirect URL. For example,
+        `https://submission-layer.net/`.
       </Table.Td>
     </Table.Tr>
     </tbody>
