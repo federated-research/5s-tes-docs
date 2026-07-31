@@ -1,0 +1,61 @@
+---
+title: What is 5S-TES?
+readingTime: PT5M
+audiences: everyone
+docType: explanation
+---
+
+import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
+
+<DocMetadata />
+
+## Prerequisites
+
+- Basic understanding of the definition of a [TRE](https://glossary.uktre.org/en/stable/#term-trusted-research-environment--tre-)
+- Basic understanding of the definition of a [federation](https://glossary.uktre.org/en/stable/#term-federation)
+
+## Overview
+
+Five Safes TES (5S-TES) enables secure cross-TRE federated analytics, where data remains in place and only analysis code is sent to the data.
+Building upon the Five Safes framework and the Task Execution Service (TES) standards, it is specifically designed to meet technical and governance constraints of TREs by separating the stages of a federated project.
+
+## The Five Safes framework
+
+![The Five Safes framework](/images/learn/five-safes.png)
+
+A set of principles that guide a data services provision of safe research access to data, These interlocking principles include:
+
+- Safe Data
+- Safe Project
+- Safe People
+- Safe Settings
+- Safe Outputs
+
+To learn more, visit the resources at [UK Data Services](https://ukdataservice.ac.uk/help/secure-lab/what-is-the-five-safes-framework/).
+
+## Global Alliance for Genomics & Health - Task Execution Service (GA4GH TES)
+
+![GA4GH TES](/images/learn/tes.png)
+
+Developed by the Global Alliance for Genomics & Health (GA4GH), the Task Execution Service provides a standard mechanism for orchestrating complex analyses across different compute environments.
+
+To learn more, visit the [GA4GH TES product page](https://www.ga4gh.org/product/task-execution-service-tes/).
+
+## Bringing it together
+
+Five Safes TES (5S-TES) is a collaboration between Swansea University and the University of Nottingham, focused on delivering new capability to existing research data infrastructure.
+
+By combining international standards, 5S-TES:
+
+- enhances GA4GH TES to receive and process federated analysis requests from multiple TREs.
+- supports Safe Data through configuration of specific and timebound data access for users.
+- performs analyses only for a project that has been approved by the TRE, deeming them a Safe Project.
+- only permits research users that have been accredited and established, indicating them as Safe People.
+- maintains Safe Setting with execution of analysis occurring within a TRE.
+- provides manual disclosure control functionality within TREs, adhering to Safe Outputs.
+
+This solution is foundational to the various programmes, including [HDR UK Federated Analytics](https://www.hdruk.ac.uk/research/research-data-infrastructure/federated-analytics/), [DARE UK TREvolution programme](https://dareuk.org.uk/trevolution/), and [EOSC-ENTRUST](https://www.eosc-entrust.eu/).
+
+## What's next?
+
+- [System Context overview](/learn/system-context)
