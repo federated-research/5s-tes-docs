@@ -6,7 +6,7 @@ export default {
   five_safes_tes: {
     display: "hidden",
   },
-
+  "co-ordinate": "Co-ordinate",
   // exclude routes until content published
   journeys: {
     display: "hidden",
