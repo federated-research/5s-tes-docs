@@ -1,0 +1,55 @@
+---
+readingTime: PT30M
+audiences: tre-operator
+docType: reference
+title: Submission Layer Components
+---
+
+import { Callout } from "nextra/components";
+import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
+
+<DocMetadata />
+
+## Prerequisites
+
+- Understanding of [Five Safes TES Context C4 diagram](/context-c4-diagram).
+
+## Core Components
+
+![Submission layer components](/sub-layer-components.png)
+
+Here is a summary of the required components which make up the Submission Layer:
+
+| Component                                            | Notes                                                                                                    |
+| ---------------------------------------------------- | :------------------------------------------------------------------------------------------------------- |
+| **KeyCloak** (only if you use the built-in KeyCloak) | The Submission apps require a Keycloak realm containing users and clients authorised to access them      |
+| **S3 storage** (e.g., MinIO, RustFS)                 | An Amazon S3 compatible Submission Storage service                                                       |
+| **RabbitMQ**                                         | A message broker for queueing submissions for target TREs                                                |
+| **PostgreSQL**                                       | A database for the Submission apps to keep local state                                                   |
+| **Submission API**                                   | A REST API for Submission Layer functionality, including the GA4GH TES API                               |
+| **Submission GUI**                                   | A Web Frontend for users to log into and interact with the Submission Layer                              |
+| **Hashicorp Vault**                                  | Identity-based secrets and encryption management system used for storing TRE service account credentials |
+
+You may choose how to distribute your own deployment of these components, as long as they are able to communicate with each other over the network.
+
+For some components, such as KeyCloak or S3 (e.g., MinIO, RustFS), you may wish to use your own existing deployments.
+
+### User accessible components
+
+A subset of the components will need to be accessible by users, outside of the TRE Layer environment, through a reverse proxy or port forwarding:
+
+| Component          | Reason                                                                                                                      | Sample Port \* |
+| ------------------ | :-------------------------------------------------------------------------------------------------------------------------- | :------------- |
+| **KeyCloak**       | So that users can authenticate and admins can manage the Submission KeyCloak Realm (if you are using the built-in KeyCloak) | 8085           |
+| **S3 GUI**         | So that Researchers can upload and download Submission data (inputs or outputs) through a web interface                     | 9001           |
+| **S3 API**         | So that TREs can put the analytics results into S3 storage through a REST API                                               | 9000           |
+| **Submission GUI** | So that users can log into and interact with the Submission Layer                                                           | 7220           |
+| **Submission API** | So that Researchers and TREs can interact with the Submission Layer via a REST API                                          | 5034           |
+
+**Note**: Sample ports are provided for reference only. It can be modified to reflect the your own
+infrastructure and configuration choices.
+
+<Callout>
+  If you are setting up a reverse proxy for S3 (e.g., MinIO, RustFS), the
+  `Websockets Support` should be enabled for S3 GUI Proxy host.
+</Callout>
