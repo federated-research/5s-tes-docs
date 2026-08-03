@@ -5,7 +5,7 @@ import {
   Share2,
   Microscope,
   Boxes,
-  ChevronRight
+  ChevronRight,
 } from "lucide-react";
 import CustomCard from "@/components/CustomCard";
 
@@ -16,9 +16,9 @@ import CustomCard from "@/components/CustomCard";
     title="Learn"
     description="Understand the core concepts, standards, and users of Five Safes TES"
     links={[
-      { title: "What is Fives Safes TES ", href: "/journeys/learn/what-is-five-safes" },
+      { title: "What is Fives Safes TES ", href: "/learn/what-is-five-safes-tes" },
       { title: "OMOP", href: "/journeys/learn/omop" },
-      { title: "Personas", href: "/journeys/learn/personas" },
+      { title: "Personas", href: "/learn/personas" },
       { title: "System Architecture", href: "/journeys/learn/system-architecture" },
     ]}
     CTA={{ text: <>Learn <ChevronRight /></>, href: "/journeys/learn" }}
@@ -43,27 +43,53 @@ import CustomCard from "@/components/CustomCard";
     icon={<Unplug size={24} />}
   />
 
-  <CustomCard
-    title="Research"
-    description="Learn about what reseachers can do with Five Safes TES"
-    links={[
-      { title: "Submit an analysis", href: "/journeys/research/submitting-an-analysis" },
-      { title: "Analysis examples", href: "/journeys/research/analysis-examples" },
-    ]}
-    CTA={{ text: <>Research <ChevronRight /></>, href: "/journeys/research" }}
-    icon={<Microscope size={24} />}
-  />
+<CustomCard
+  title="Research"
+  description="Learn about what reseachers can do with Five Safes TES"
+  links={[
+    {
+      title: "Submit an analysis",
+      href: "/journeys/research/submitting-an-analysis",
+    },
+    {
+      title: "Analysis examples",
+      href: "/journeys/research/analysis-examples",
+    },
+  ]}
+  CTA={{
+    text: (
+      <>
+        Research <ChevronRight />
+      </>
+    ),
+    href: "/journeys/research",
+  }}
+  icon={<Microscope size={24} />}
+/>
 
-  <CustomCard
-    title="Co-ordinate"
-    description="Manage a consortium of TREs to deliver federated research studies"
-    links={[
-      { title: "TREs, projects and users", href: "/journeys/co-ordinate/management" },
-      { title: "Setup a Submission Layer", href: "/journeys/co-ordinate/setup-submission" },
-    ]}
-    CTA={{ text: <>Co-ordinate <ChevronRight /></>, href: "/journeys/co-ordinate" }}
-    icon={<Share2 size={24} />}
-  />
+<CustomCard
+  title="Co-ordinate"
+  description="Manage a consortium of TREs to deliver federated research studies"
+  links={[
+    {
+      title: "TREs, projects and users",
+      href: "/journeys/co-ordinate/management",
+    },
+    {
+      title: "Setup a Submission Layer",
+      href: "/journeys/co-ordinate/setup-submission",
+    },
+  ]}
+  CTA={{
+    text: (
+      <>
+        Co-ordinate <ChevronRight />
+      </>
+    ),
+    href: "/journeys/co-ordinate",
+  }}
+  icon={<Share2 size={24} />}
+/>
 
   <CustomCard
     title="Integrate"
@@ -79,7 +105,7 @@ import CustomCard from "@/components/CustomCard";
     CTA={{ text: <>Integrate <ChevronRight /></>, href: "/journeys/integrate" }}
     icon={<Boxes size={24} />}
 
-  />
+/>
 
   <CustomCard
     title="Contribute"
