@@ -1,0 +1,254 @@
+---
+readingTime: PT30M
+audiences: federation-operator
+docType: reference
+---
+
+import { Table } from "nextra/components";
+import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
+
+<DocMetadata />
+
+# Configuration Reference
+
+This page provides a reference for the environment variables that are used to configure the TRE Agent and its dependencies.
+
+### General App Configuration
+
+This section contains the environment variables that are used to configure the general app.
+
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>Environment Variable</Table.Th>
+      <Table.Th>Description</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>`DEPLOYMENT_VERSION`</Table.Td>
+      <Table.Td>
+        The version of the TRE Agent app you are deploying. Find the version
+        [here](https://github.com/SwanseaUniversityMedical/5s-Tes/releases),
+        between `v` and `-5S-TES-containers`. For example, `1.5.1` is the
+        version for the release `v1.5.1-5S-TES-containers`.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`AppName`</Table.Td>
+      <Table.Td>
+        Name of the application shown on the Navigation bar of TRE Agent UI.
+        Default is `Five Safes TES`.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`PGLOGIN` and `PGPASSWORD`</Table.Td>
+      <Table.Td>
+        The admin credentials for the PostgreSQL database used by the TRE Agent.
+        These are recommended to be changed from the default values.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`CONFIG_PATH`</Table.Td>
+      <Table.Td>
+        The path from the compose manifest `.yml` files to the shared
+        configuration files (e.g., realm config, ldap, vault, init scripts) for
+        the Submission Layer. Default is
+        `../../../DeploymentStack/Submission/config`. Change this if you are
+        using a different files structure in your own deployment.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>
+        `KeycloakAdmin__Username` and `KeycloakAdmin__Password`
+      </Table.Td>
+      <Table.Td>
+        Submission Layer KeyCloak realm admin credentials for service accounts
+        creation. Follow this
+        [guide](/co-ordinate/entity-management/add-realm-admin) to generate.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`CONFIG_PATH`</Table.Td>
+      <Table.Td>
+        The path from the compose manifest `.yml` files to the shared
+        configuration files (e.g., realm config, ldap, vault, init scripts) for
+        the Submission Layer. Default is
+        `../../../DeploymentStack/Submission/config`. Change this if you are
+        using a different files structure in your own deployment.
+      </Table.Td>
+    </Table.Tr>
+  </tbody>
+</Table>
+
+### Vault, RabbitMQ, Serilog Configuration
+
+This section contains the environment variables that are used to configure the LDAP, Vault, Camunda, RabbitMQ, and Serilog services.
+
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>Environment Variable</Table.Th>
+      <Table.Th>Description</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>`VaultStartupCommand`</Table.Td>
+      <Table.Td>
+        The command to start the Vault server. Default is `vault server
+        -config=/vault/config/config.json` to start the Vault server in the
+        production mode.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`VaultRootToken`</Table.Td>
+      <Table.Td>
+        The root token for the Vault server. This is used to authenticate with
+        the Vault server. Follow the steps in `3.2`
+        [here](/co-ordinate/setup-sub-layer/deployment-steps#configure-the-stack)
+        to generate a new root token.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`RabbitMQDefaultPassword`</Table.Td>
+      <Table.Td>
+        The default password for the RabbitMQ server used by the Submission
+        Layer. Change this from the default value in production. Default
+        RabbitMQ username is set to `rabbitmq` and default RabbitMQ host is set
+        to `rabbitmq`.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`SerilogLevel`</Table.Td>
+      <Table.Td>
+        The Serilog logging level for the Submission Layer. Default is
+        `Information`. Change this depending on the logging level you want to
+        set for the Submission Layer. More details
+        [here](https://github.com/serilog/serilog/wiki/Configuration-Basics#minimum-level).
+      </Table.Td>
+    </Table.Tr>
+  </tbody>
+</Table>
+
+### S3 configuration
+
+This section contains the environment variables that are used to configure the S3 service.
+
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>Environment Variable</Table.Th>
+      <Table.Th>Description</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>`SubmissionS3ConsoleUrl`</Table.Td>
+      <Table.Td>
+        Where the S3 Submission Layer UI is hosted. For example,
+        `https://s3-submission-ui.example.com`.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`SubmissionS3RootUser`</Table.Td>
+      <Table.Td>The admin user for the Submission Layer S3 server.</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`SubmissionS3RootPass`</Table.Td>
+      <Table.Td>
+        The admin password for the Submission Layer S3 server.
+      </Table.Td>
+    </Table.Tr>
+  </tbody>
+</Table>
+
+### OpenID and redirect URLs Configuration
+
+This section contains the environment variables that are used to configure the OpenID configuration.
+
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>Environment Variable</Table.Th>
+      <Table.Th>Description</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>`SubmissionS3OpenidSecret`</Table.Td>
+      <Table.Td>
+        The OpenID secret for the S3 client of Dare-Control realm. There is a
+        default value in the realm configuration, but you should regenerate it
+        for production deployments. Do this by navigating to `Dare-Control` realm ->
+        `Clients` -> `Dare-Control-S3` -> `Credentials`. Then click `Regenerate`
+        and copy the new value into this environment variable.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`SubmissionUIClientSecret`</Table.Td>
+      <Table.Td>
+        The OpenID secret for the Submission Layer UI Keycloak client `Dare-Control-UI`. Find and
+        regenerate this secret by navigating to `Dare-Control` realm -> `Clients` ->
+        `Dare-Control-UI` -> `Credentials`. Then click `Regenerate` and copy the new
+        value into this environment variable.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`SubmissionAPIKeyCloakSecret`</Table.Td>
+      <Table.Td>
+        The OpenID secret for the Submission API Keycloak client `Dare-Control-API`. Find
+        and regenerate this secret by navigating to `Dare-Control` realm ->
+        `Clients` -> `Dare-Control-API` -> `Credentials`. Then click `Regenerate`
+        and copy the new value into this environment variable.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`SubmissionKeyCloakClientUIRedirectURL`</Table.Td>
+      <Table.Td>
+        The URL for the Submission Layer UI's Keycloak redirect URL. For example,
+        `https://submission-layer.example.com/`.
+      </Table.Td>
+    </Table.Tr>
+    </tbody>
+</Table>
+
+### Built-in KeyCloak Configuration
+
+This section contains the environment variables that are used to configure the built-in Keycloak server.
+
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>Environment Variable</Table.Th>
+      <Table.Th>Description</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>`KeycloakBootstrapAdminPassword`</Table.Td>
+      <Table.Td>
+        The bootstrap admin password for the Keycloak server used by the
+        Submission layer. This is used to bootstrap the Keycloak server with the
+        admin user.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`KeycloakStartupCommand`</Table.Td>
+      <Table.Td>
+        The command to start the Keycloak server. If your Keycloak doesn't have
+        `HTTPS` enabled yet, this is `start-dev`. Otherwise, this should be set
+        to `start`.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`KeycloakFullURL`</Table.Td>
+      <Table.Td>
+        The full hostname URL of the Keycloak server, for
+        example,`http://localhost:8085` or `https://my-keycloak.example.com`.
+        This is only used if you are using a local/internal Keycloak service
+        defined in the `ServiceStack/compose-manifests/shared/auth.yml` file.
+      </Table.Td>
+    </Table.Tr>
+  </tbody>
+</Table>

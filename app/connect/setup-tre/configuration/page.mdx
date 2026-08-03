@@ -73,7 +73,7 @@ This section contains the environment variables that are used to configure the g
       <Table.Td>`TRE_KEYCLOAK_URL`</Table.Td>
       <Table.Td>
         The URL of the TRE Layer's Keycloak server, for example,
-        `http://keycloak:8080` (for default local Keycloak server) or `https://tre-keycloak.net` (for a remote Keycloak server).
+        `http://keycloak:8080` (for default local Keycloak server) or `https://tre-keycloak.example.com` (for a remote Keycloak server).
       </Table.Td>
     </Table.Tr>
     
@@ -82,7 +82,7 @@ This section contains the environment variables that are used to configure the g
       <Table.Td>
         Where TESK or Funnel API is hosted. For example,
         `http://host.docker.internal:8000/v1/tasks` (when Funnel is hosted
-        locally) or `http://my-funnel.com/tasks`. This can be filled in with the URL of the TES executing agent (e.g., Funnel) after step 8 of this guide.
+        locally) or `http://my-funnel.example.com/tasks`. This can be filled in with the URL of the TES executing agent (e.g., Funnel) after step 8 of this guide.
       </Table.Td>
     </Table.Tr>
     
@@ -110,10 +110,10 @@ This section contains the environment variables that are used to configure the g
     <Table.Tr>
       <Table.Td>`CONFIG_PATH`</Table.Td>
       <Table.Td>
-        The path for the to the shared configuration files (e.g., realm config,
+        The path from the compose manifest `.yml` files to the shared configuration files (e.g., realm config,
         ldap, vault, init scripts) for the TRE Layer. Default is
         `../../../DeploymentStack/TRE/config`. 
-        Change this if you are using a different path for the configuration files in your own deployment.
+        Change this if you are using a different files structure in your own deployment.
       </Table.Td>
     </Table.Tr>
 
@@ -149,21 +149,18 @@ This section contains the environment variables that are used to configure the L
     <Table.Tr>
       <Table.Td>`VaultStartupCommand`</Table.Td>
       <Table.Td>
-        The command to start the Vault server. This is used to store and
-        retrieve the ephemeral user credentials for the credential management
-        process. In production, this should be set to `vault server
+        The command to start the Vault server. Default is `vault server
         -config=/vault/config/config.json` to start the Vault server in the
-        production mode. Setting up Vault server in production mode is required
-        a few more steps detailed
-        [here](/five_safes_tes/reference_implementation/core_components#vault).
+        production mode.
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
       <Table.Td>`VaultRootToken`</Table.Td>
       <Table.Td>
-        In dev mode (or Demostack), this is pre-filled with a default value. In
-        production, to generate a new root token, do the steps detailed
-        [here](/five_safes_tes/reference_implementation/core_components#vault).
+        The root token for the Vault server. This is used to authenticate with
+        the Vault server. Follow the steps in `3.3`
+        [here](/connect/setup-tre/deployment-steps#configure-the-stack) to
+        generate a new root token.
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
@@ -202,18 +199,8 @@ This section contains the environment variables that are used to configure the S
     <Table.Tr>
       <Table.Td>`TRES3ConsoleUrl`</Table.Td>
       <Table.Td>
-        Where the S3 TRE UI is hosted. For example,
-        `http://localhost:9003` or `http://s3-tre-ui:9000`.
-      </Table.Td>
-    </Table.Tr>
-    <Table.Tr>
-      <Table.Td>`TRES3OpenidSecret`</Table.Td>
-      <Table.Td>
-        The OpenID secret for the S3 client of Dare-TRE realm. There is a
-        default value in the realm configuration, but you should regenerate it
-        for production deployments. Do this by navigating to `Dare-TRE` realm ->
-        `Clients` -> `Dare-TRE-S3` -> `Credentials`. Then click `Regenerate`
-        and copy the new value into this environment variable.
+        Where the S3 TRE UI is hosted. For example, `http://localhost:9003` or
+        `http://s3-tre-ui:9000`.
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
@@ -280,8 +267,8 @@ This section contains the environment variables that are used to configure the c
       <Table.Td>
         The URL of the Submission Layer's Keycloak server, for example,
         `http://keycloak:8080` (for default local Keycloak server) or
-        `https://submission-keycloak.net` (for a production Submission Layer
-        Keycloak server).
+        `https://submission-keycloak.example.com` (for a production Submission
+        Layer Keycloak server).
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
@@ -294,7 +281,7 @@ This section contains the environment variables that are used to configure the c
   </tbody>
 </Table>
 
-### OpenID Configuration
+### OpenID and redirect URLs Configuration
 
 This section contains the environment variables that are used to configure the OpenID configuration.
 
@@ -320,7 +307,7 @@ This section contains the environment variables that are used to configure the O
       <Table.Td>`EgressKeyCloakClientUIRedirectURL`</Table.Td>
       <Table.Td>
         The URL for the Egress Layer's Keycloak redirect URL. For example,
-        `https://localhost:8100/`.
+        `http://localhost:8100/` or `https://egress-keycloak.example.com/`.
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
@@ -399,25 +386,28 @@ This section contains the environment variables that are used to configure the b
     <Table.Tr>
       <Table.Td>`KeycloakBootstrapAdminPassword`</Table.Td>
       <Table.Td>
-        The bootstrap admin password for the Keycloak server used by the TRE Agent. This is used to bootstrap the Keycloak server with the admin user.
+        The bootstrap admin password for the Keycloak server used by the TRE
+        Agent. This is used to bootstrap the Keycloak server with the admin
+        user.
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
       <Table.Td>`KeycloakStartupCommand`</Table.Td>
       <Table.Td>
-        The command to start the Keycloak server. In dev mode (or Demostack), this is `start-dev`.
-        In production, if you have HTTPS configured for Keycloak, this should be set to `start`.
+        The command to start the Keycloak server. If your Keycloak doesn't have
+        `HTTPS` enabled yet, this is `start-dev`. Otherwise, this should be set
+        to `start`.
       </Table.Td>
     </Table.Tr>
-
     <Table.Tr>
       <Table.Td>`KeycloakFullURL`</Table.Td>
       <Table.Td>
-        The full hostname URL of the Keycloak server, for example,`http://localhost:8085` or `https://my-keycloak.net`.
-        This is only used if you are using a local/internal Keycloak service defined in the `ServiceStack/compose-manifests/shared/auth.yml` file.
+        The full hostname URL of the Keycloak server, for
+        example,`http://localhost:8085` or `https://my-keycloak.example.com`.
+        This is only used if you are using a local/internal Keycloak service
+        defined in the `ServiceStack/compose-manifests/shared/auth.yml` file.
       </Table.Td>
     </Table.Tr>
-
   </tbody>
 </Table>
 
