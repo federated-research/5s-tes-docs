@@ -25,29 +25,23 @@ import CustomCard from "@/components/CustomCard";
     icon={<BookOpen size={24} />}
   />
 
-<CustomCard
-  title="Connect"
-  description="Learn about how TRE can operate with Five Safes TES"
-  links={[
-    {
-      title: "Setup TRE Components",
-      href: "/connect/setup-tre/deployment-steps",
-    },
-    { title: "Connect a TRE", href: "/connect/connect-submission" },
-    { title: "Projects and users", href: "/connect/approvals" },
-    { title: "TRE data access", href: "/journeys/connect/tre-data-access" },
-    { title: "Outputs approval", href: "/connect/approve-outputs" },
-  ]}
-  CTA={{
-    text: (
-      <>
-        Connect <ChevronRight />
-      </>
-    ),
-    href: "/journeys/connect",
-  }}
-  icon={<Unplug size={24} />}
-/>
+  <CustomCard
+    title="Connect"
+    description="Learn about how TRE can operate with Five Safes TES"
+    links={[
+        {
+        title: "Setup TRE Components",
+        href: "/connect/setup-tre/deployment-steps",
+      },
+      { title: "TRE data access", href: "/connect/controlling-tre-data-access"  },
+      { title: "Connect a TRE", href: "/connect/connect-submission" },
+      { title: "Projects and users", href: "/connect/approvals" },
+      { title: "TRE data access", href: "/journeys/connect/tre-data-access" },
+      { title: "Outputs approval", href: "/connect/approve-outputs" },
+    ]}
+    CTA={{ text: <>Connect <ChevronRight /></>, href: "/journeys/connect" }}
+    icon={<Unplug size={24} />}
+  />
 
 <CustomCard
   title="Research"
