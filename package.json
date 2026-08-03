@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next --turbopack",
     "build": "next build",
-    "start": "next start",
+    "start": "npx serve out",
     "lint": "eslint",
     "postbuild": "pagefind --site .next/server/app --output-path out/_pagefind"
   },
