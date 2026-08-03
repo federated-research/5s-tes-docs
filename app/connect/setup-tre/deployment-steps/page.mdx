@@ -288,7 +288,7 @@ Depending on where and how you want to deploy KeyCloak, the configuration is dif
     <Table.Tr>
       <Table.Td>`KeycloakFullURL`</Table.Td>
       <Table.Td>
-        The full hostname URL of the Keycloak server, for example,`http://localhost:8085` or `https://my-keycloak.net`. 
+        The full hostname URL of the Keycloak server, for example,`http://localhost:8085` or `https://my-keycloak.example.com`. 
         This is only used if you are using a local/internal Keycloak service defined in the `ServiceStack/compose-manifests/shared/auth.yml` file.
       </Table.Td>
     </Table.Tr>
@@ -383,37 +383,37 @@ A guide to set up SSL certs and subdomains is coming soon.
     <Table.Tr>
       <Table.Td>`TRE_KEYCLOAK_URL`</Table.Td>
       <Table.Td>
-        The URL of the TRE Layer’s Keycloak server, for example, https://tre-keycloak.net.
+        The URL of the TRE Layer’s Keycloak server, for example, https://tre-keycloak.example.com.
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
       <Table.Td>`TreApiPublicUrl`</Table.Td>
       <Table.Td>
-        The public URL for the TRE Agent API. For example, https://my-TRE-host.net.
+        The public URL for the TRE Agent API. For example, https://my-TRE-host.example.com.
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
       <Table.Td>`TRES3ConsoleUrl`</Table.Td>
       <Table.Td>
-        Where the S3 TRE UI is hosted. For example, https://s3-tre-ui.net.
+        Where the S3 TRE UI is hosted. For example, https://s3-tre-ui.example.com.
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
       <Table.Td>`TreKeyCloakClientUIRedirectURL`</Table.Td>
       <Table.Td>
-        The URL for the TRE UI's Keycloak redirect URL. For example, https://host-of-tre.net/.
+        The URL for the TRE UI's Keycloak redirect URL. For example, https://tre-keycloak.example.com/.
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
       <Table.Td>`EgressKeyCloakClientUIRedirectURL`</Table.Td>
       <Table.Td>
-        The URL for the Egress Layer's Keycloak redirect URL. For example, https://host-of-egress.net/.
+        The URL for the Egress Layer's Keycloak redirect URL. For example, https://egress-keycloak.example.com/.
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
       <Table.Td>`KeycloakFullURL`</Table.Td>
       <Table.Td>
-        The full hostname URL of the Keycloak server, for example, https://my-keycloak.net. Note: This is only used if you are using a local/internal Keycloak service defined in the `ServiceStack/compose-manifests/shared/auth.yml` file.
+        The full hostname URL of the Keycloak server, for example, https://my-keycloak.example.com. Note: This is only used if you are using a local/internal Keycloak service defined in the `ServiceStack/compose-manifests/shared/auth.yml` file.
       </Table.Td>
     </Table.Tr>
   </tbody>
@@ -440,7 +440,7 @@ If you have not set this up yet, setup a TES backend, e.g., Funnel (with the ins
   <tbody>
     <Table.Tr>
       <Table.Td>`TesAPIUrl`</Table.Td>
-      <Table.Td>Where TES backend is hosted. For example: http://my-tes-backend.com/tasks.</Table.Td>
+      <Table.Td>Where TES backend is hosted. For example: `http://my-tes-backend.example.com/tasks`.</Table.Td>
     </Table.Tr>
   </tbody>
 </Table>
