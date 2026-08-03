@@ -1,3 +1,4 @@
+# Configuration Reference
 ---
 readingTime: PT30M
 audiences: federation-operator
@@ -147,7 +148,7 @@ This section contains the environment variables that are used to configure the S
       <Table.Td>`SubmissionS3ConsoleUrl`</Table.Td>
       <Table.Td>
         Where the S3 Submission Layer UI is hosted. For example,
-        `https://s3-submission-ui.net`.
+        `https://s3-submission-ui.example.com`.
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
@@ -207,7 +208,7 @@ This section contains the environment variables that are used to configure the O
       <Table.Td>`SubmissionKeyCloakClientUIRedirectURL`</Table.Td>
       <Table.Td>
         The URL for the Submission Layer UI's Keycloak redirect URL. For example,
-        `https://submission-layer.net/`.
+        `https://submission-layer.example.com/`.
       </Table.Td>
     </Table.Tr>
     </tbody>
@@ -245,9 +246,9 @@ This section contains the environment variables that are used to configure the b
       <Table.Td>`KeycloakFullURL`</Table.Td>
       <Table.Td>
         The full hostname URL of the Keycloak server, for
-        example,`http://localhost:8085` or `https://my-keycloak.net`. This is
-        only used if you are using a local/internal Keycloak service defined in
-        the `ServiceStack/compose-manifests/shared/auth.yml` file.
+        example,`http://localhost:8085` or `https://my-keycloak.example.com`.
+        This is only used if you are using a local/internal Keycloak service
+        defined in the `ServiceStack/compose-manifests/shared/auth.yml` file.
       </Table.Td>
     </Table.Tr>
   </tbody>

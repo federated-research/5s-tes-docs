@@ -73,7 +73,7 @@ This section contains the environment variables that are used to configure the g
       <Table.Td>`TRE_KEYCLOAK_URL`</Table.Td>
       <Table.Td>
         The URL of the TRE Layer's Keycloak server, for example,
-        `http://keycloak:8080` (for default local Keycloak server) or `https://tre-keycloak.net` (for a remote Keycloak server).
+        `http://keycloak:8080` (for default local Keycloak server) or `https://tre-keycloak.example.com` (for a remote Keycloak server).
       </Table.Td>
     </Table.Tr>
     
@@ -82,7 +82,7 @@ This section contains the environment variables that are used to configure the g
       <Table.Td>
         Where TESK or Funnel API is hosted. For example,
         `http://host.docker.internal:8000/v1/tasks` (when Funnel is hosted
-        locally) or `http://my-funnel.com/tasks`. This can be filled in with the URL of the TES executing agent (e.g., Funnel) after step 8 of this guide.
+        locally) or `http://my-funnel.example.com/tasks`. This can be filled in with the URL of the TES executing agent (e.g., Funnel) after step 8 of this guide.
       </Table.Td>
     </Table.Tr>
     
@@ -267,8 +267,8 @@ This section contains the environment variables that are used to configure the c
       <Table.Td>
         The URL of the Submission Layer's Keycloak server, for example,
         `http://keycloak:8080` (for default local Keycloak server) or
-        `https://submission-keycloak.net` (for a production Submission Layer
-        Keycloak server).
+        `https://submission-keycloak.example.com` (for a production Submission
+        Layer Keycloak server).
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
@@ -307,7 +307,7 @@ This section contains the environment variables that are used to configure the O
       <Table.Td>`EgressKeyCloakClientUIRedirectURL`</Table.Td>
       <Table.Td>
         The URL for the Egress Layer's Keycloak redirect URL. For example,
-        `https://localhost:8100/`.
+        `http://localhost:8100/` or `https://egress-keycloak.example.com/`.
       </Table.Td>
     </Table.Tr>
     <Table.Tr>
@@ -403,9 +403,9 @@ This section contains the environment variables that are used to configure the b
       <Table.Td>`KeycloakFullURL`</Table.Td>
       <Table.Td>
         The full hostname URL of the Keycloak server, for
-        example,`http://localhost:8085` or `https://my-keycloak.net`. This is
-        only used if you are using a local/internal Keycloak service defined in
-        the `ServiceStack/compose-manifests/shared/auth.yml` file.
+        example,`http://localhost:8085` or `https://my-keycloak.example.com`.
+        This is only used if you are using a local/internal Keycloak service
+        defined in the `ServiceStack/compose-manifests/shared/auth.yml` file.
       </Table.Td>
     </Table.Tr>
   </tbody>
