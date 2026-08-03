@@ -1,7 +1,7 @@
 ---
 title: Add a Keycloak user
 readingTime: PT15M
-audiences: [federation-operator, tre-operator]
+audiences: [federation-operator, tre-operator, contributor]
 docType: guide
 display: hidden # Hide from navigation for now because it not belongs to any card
 ---
@@ -13,7 +13,7 @@ import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
 
 # Adding a Keycloak User
 
-This guide describes how to add a new user to the Keycloak instance.
+This guide describes how to add a new user to the Keycloak instance, especially for the Submission Layer and TRE Layer in 5S-TES.
 
 ## Prerequisites
 
@@ -24,3 +24,58 @@ This guide describes how to add a new user to the Keycloak instance.
   - Last Name
   - Email
   - Role
+
+## Steps
+
+<Steps>
+### Login to Keycloak and navigate to the intended Realm
+
+- Login as an admin user (of the master realm) to Keycloak server of the service you are adding the user to (e.g., Submission Layer, TRE Layer, etc.).
+- Use `Manage realms` to navigate to the realm you are adding the user to, i.e., `Dare-Control` for Submission Layer, `Dare-TRE` for TRE Layer and `Data-Egress` for Egress Layer.
+
+### Navigate to the Users page.
+
+Navigate to the `Users` page.
+
+### Open Create User dialog.
+
+Click on the blue 'Add user' button to open the 'Create user' dialog.
+
+![Add user dialog](/images/manage-entities/keycloak-CreateUser.png)
+
+### Enter User Details, and Assign to Required Groups.
+
+1. Select the required user actions on first log-in
+   (this is optional, and recommended to be left blank)
+2. Select if email is verified
+3. Set Username (mandatory)
+4. Set Email, First and Last names (optional, recommended to be filled in)
+5. Open the 'Select groups to join' dialog by clicking the 'Join Groups' button.
+   Select the required groups (as noted in the prerequisites).
+6. Finally, click the blue 'Create' button at the bottom of the screen.
+
+<Callout type="info">
+  - In a Submission Layer, to be able to add/remove people to/from a project,
+  users need to have `dare-control-admin` role (Role Mapping tab) and joined
+  `dare-control-admin` group (Groups tab) on KeyCloak. 
+  - In TRE Layer, to be able to access the S3 bucket, TRE admin needs to have `dare-tre-admin` role 
+  (Role Mapping tab) and joined `dare-tre-admin` group (Groups tab) on KeyCloak.
+</Callout>
+
+### Apply any Required Extra Configurations
+
+Once the user account has been created then
+the 'User details' page for the new user will be displayed.
+At this point you can set any required extra configurations (e.g., password, role, group) for the new account.
+
+![Change user details](/images/manage-entities/KeyCloak_ChangeUserDetails.png)
+
+<Callout>
+  - You can use the `Credentials` tab to set a temporary or permanent password for the user.
+  - You can use the `Details` tab to set any required extra configurations for the new account.
+  - You can use the `Role Mapping` tab to set the role for the user. For example, Submission Layer admin needs to have `dare-control-admin` role.
+  - You can use the `Groups` tab to set the groups for the user. For example, Submission Layer admin needs to be joined `dare-control-admin` group.
+</Callout>
+
+
+</Steps>
