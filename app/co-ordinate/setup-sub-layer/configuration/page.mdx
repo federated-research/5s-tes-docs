@@ -4,7 +4,7 @@ audiences: federation-operator
 docType: reference
 ---
 
-import { Table } from "nextra/components";
+import { Table, Callout } from "nextra/components";
 import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
 
 <DocMetadata />
@@ -162,6 +162,13 @@ This section contains the environment variables that are used to configure the S
     </Table.Tr>
   </tbody>
 </Table>
+
+<Callout>
+  Even though `SubmissionS3ApiUrl` is not used by Submission Layer, it is
+  required by TRE Agent to connect to the Submission Layer S3 server. This is
+  the URL of the S3 API, one of Submission Layer's [User accessible
+  components](/co-ordinate/components#user-accessible-components).
+</Callout>
 
 ### OpenID and redirect URLs Configuration
 
