@@ -8,7 +8,7 @@ model {
     postgres = component {
       title 'Postgres'
       description 'Stores projects, submissions, registered TREs, users'
-      icon tech:postgresql
+      icon https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/postgresql.svg
     }
 
     rabbitmq = component {

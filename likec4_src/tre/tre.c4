@@ -31,7 +31,7 @@ model {
     postgres = component {
       title 'Postgres'
       description 'Store project details, config'
-      icon tech:postgresql
+      icon https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/postgresql.svg
     }
 
     vault = component {
