@@ -14,7 +14,7 @@ model {
     rabbitmq = component {
       title 'RabbitMQ'
       description 'MQTT message broker'
-      icon tech:rabbitmq
+      icon https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/rabbitmq.svg
     }
 
     sub_keycloak = component {
