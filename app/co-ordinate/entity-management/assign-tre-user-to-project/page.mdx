@@ -1,0 +1,62 @@
+---
+title: Assign TRE and Researcher to a Project
+readingTime: PT15M
+audiences: federation-operator
+docType: guide
+---
+
+import { Steps, Callout } from "nextra/components";
+import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
+
+<DocMetadata />
+
+# Assigning a TRE and Researcher to a Project
+
+This guide describes how to assign a TRE and Researcher to a Project.
+
+## Prerequisites
+
+- List of Researchers and TREs of the target Project
+- A Submission Layer Administrator user - Keycloak Admin has to create a Submission Layer Admin user with `dare-control-admin` role and `dare-control-admin` group using this [guide](/co-ordinate/entity-management/add-keycloak-user)
+- Access to the Submission Layer as a Submission Layer administrator user
+
+<Steps>
+### Login to the Submission Layer
+
+Login to the Submission Layer as Submission Layer Administrator.
+
+### Open the `Project` page
+
+Select the `Projects` tab at the top of the home page. This will display the list of existing Projects.
+
+Click on the project name to open the project details page.
+
+### Assign TRE and Researcher to the Project
+
+**To assign Researchers:**
+
+- click on the `People` tab. This will display the list of Researchers assigned to the project.
+- click on the `+ Add User` button to add a new Researcher to the project.
+- select the Researcher you wish to assign to the project from the list of available Researchers.
+- click on the `Add` button to save the changes.
+
+![Assign Researcher to Project](/images/manage-entities/assign-researcher.png)
+
+**To assign TREs:**
+
+- click on the `TREs` tab. This will display the list of TREs assigned to the project.
+- click on the `+ Add TRE` button to add a new TRE to the project.
+- select the TRE you wish to assign to the project from the list of available TREs.
+- click on the `Add` button to save the changes.
+
+![Assign TRE to Project](/images/manage-entities/assign-tre.png)
+
+<Callout>
+  - Click on the TRE or Researcher name to open the TRE or Researcher details page.
+  - TRE and Researcher can be assigned to multiple projects. 
+  - To remove a TRE or Researcher from a project, click on the bin icon button on the TRE or Researcher row.
+</Callout>
+
+</Steps>
+
+{/* ## What's next?  TODO: add What's next section */}
