@@ -40,3 +40,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# likec4
+likec4_react/
+likec4_src/**/*.png
+public/images/likec4
