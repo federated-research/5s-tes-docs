@@ -2,7 +2,7 @@ model {
   extend egress.egress_app {
     egress_ui = component {
       title 'Egress UI'
-      description 'UI for approving or rejecting data exfiltration'
+      description 'UI for for managing egress'
       icon https://docs.federated-analytics.ac.uk/logo.svg
 
       -> egress_api 

@@ -2,7 +2,7 @@ model {
   extend egress {
     egress_app = service {
       title 'Egress Application'
-      description 'Application providing data owners with the ability to approve or reject data egress'
+      description 'Application to ensure only the data that has been approved to move is what is moving'
     }
     
     keycloak = component {
