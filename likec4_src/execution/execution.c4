@@ -4,7 +4,7 @@ model {
       title "TES Engine"
       description "TES compliant job engine"
       technology "e.g. Funnel, TESK"
-      icon /logos/tes.png
+      // icon /logos/tes.png
 
       -> protected_data 'Queries protected data'
       -> tre.s3 'Stores job result'
