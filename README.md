@@ -10,6 +10,8 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the docs site.
 
+**LikeC4 Development**
+
 If you encounter 404 errors on the C4 diagrams, try running the following command to generate the images:
 
 ```bash
