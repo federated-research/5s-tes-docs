@@ -28,6 +28,8 @@ npm run likec4:dev
 
 Edit the source code in the likec4_src directory and then the images will be updated automatically.
 
+NOTE: You can edit the positions/layout of the components of likeC4 diagrams using the web browser. The modifications will be saved in the `/likec4_src/.likec4` directory as `snap` files. Just keep them and export the images again to see the changes in the docs site.
+
 To export the images to see them in the docs
 
 ```bash
