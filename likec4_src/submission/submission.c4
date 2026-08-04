@@ -26,7 +26,7 @@ model {
     s3 = component {
       title 'RustFS'
       description 'S3 Object Store for inputs and approved results'
-      icon https://raw.githubusercontent.com/rustfs/docs.rustfs.com/refs/heads/main/docs/trademark/images/logo-white-bg.svg
+      icon https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/rustfs.svg
 
       s3 -> researcher 'Downloads result'
     }
