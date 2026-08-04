@@ -1,0 +1,21 @@
+model {
+  extend egress {
+    egress_app = service {
+      title 'Egress Application'
+      description 'Application to ensure only the data that has been approved to move is what is moving'
+    }
+    
+    keycloak = component {
+      title 'Keycloak'
+      description 'Authenticates requests throughout the layer'
+      icon /logos/keycloak.svg
+    }
+  }
+}
+
+views {
+  view egress of egress {
+    title 'Egress / Egress Service'
+    include *
+  }
+}

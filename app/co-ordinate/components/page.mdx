@@ -7,6 +7,7 @@ title: Submission Layer Components
 
 import { Callout } from "nextra/components";
 import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
+import Diagram from "@/components/c4_diagram";
 
 <DocMetadata />
 
@@ -16,7 +17,18 @@ import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
 
 ## Core Components
 
-![Submission layer components](/sub-layer-components.png)
+<figure>
+  <Diagram
+    alt_image="/images/likec4/submission/submission_app.png"
+    alt_text="Submission Layer architecture diagram"
+    viewId="submission_app"
+  />
+  <figcaption
+    style={{ fontStyle: "italic", fontSize: "0.7em", marginTop: "8px" }}
+  >
+    Figure 1: Submission Layer components. Click for interactive mode.
+  </figcaption>
+</figure>
 
 Here is a summary of the required components which make up the Submission Layer:
 

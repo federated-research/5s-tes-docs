@@ -6,6 +6,7 @@ title: TRE Layer Components
 
 import { Steps, Callout, Table } from "nextra/components";
 import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
+import Diagram from "@/components/c4_diagram";
 
 <DocMetadata />
 
@@ -17,7 +18,18 @@ import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
 
 ## Core Components
 
-![TRE layer components](/tre-components.png)
+<figure>
+  <Diagram
+    alt_image="/images/likec4/tre/tre_app.png"
+    alt_text="TRE Agent architecture diagram"
+    viewId="tre_app"
+  />
+  <figcaption
+    style={{ fontStyle: "italic", fontSize: "0.7em", marginTop: "8px" }}
+  >
+    Figure 1: TRE Agent components. Click for interactive mode.
+  </figcaption>
+</figure>
 
 Here is a summary of the required components which make up the TRE Layer:
 
