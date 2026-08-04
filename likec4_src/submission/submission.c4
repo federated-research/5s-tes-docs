@@ -8,25 +8,25 @@ model {
     postgres = component {
       title 'Postgres'
       description 'Stores projects, submissions, registered TREs, users'
-      icon https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/postgresql.svg
+      icon /logos/postgresql.svg
     }
 
     rabbitmq = component {
       title 'RabbitMQ'
       description 'MQTT message broker'
-      icon https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/rabbitmq.svg
+      icon /logos/rabbitmq.svg
     }
 
     sub_keycloak = component {
       title 'Submission Keycloak'
       description 'Authenticates requests throughout the layer'
-      icon https://upload.wikimedia.org/wikipedia/commons/2/29/Keycloak_Logo.png
+      icon /logos/keycloak.svg
     }
     
     s3 = component {
       title 'RustFS'
       description 'S3 Object Store for inputs and approved results'
-      icon https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/rustfs.svg
+      icon /logos/rustfs.svg
 
       s3 -> researcher 'Downloads result'
     }

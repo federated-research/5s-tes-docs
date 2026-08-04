@@ -3,7 +3,7 @@ model {
     sub_ui = component {
       title 'Submission UI'
       description 'User facing application for job submission and result viewing'
-      icon https://docs.federated-analytics.ac.uk/logo.svg
+      icon /logos/5s-tes-logo.svg
 
       -> sub_api
     }
@@ -11,7 +11,7 @@ model {
     sub_api = component {
       title 'Submission API'
       description 'Backend for submission processes, handles user side data management and requests job dispatch'
-      icon https://docs.federated-analytics.ac.uk/logo.svg
+      icon /logos/5s-tes-logo.svg
 
       -> sub_ui
 

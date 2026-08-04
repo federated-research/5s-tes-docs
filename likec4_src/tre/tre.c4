@@ -8,7 +8,7 @@ model {
     camunda = component {
       title 'Camunda'
       description 'Credential Handler'
-      icon https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/2025_Logo_Camunda_Black.png/960px-2025_Logo_Camunda_Black.png
+      icon /logos/camunda.svg
 
       -> tre.vault 'Send ephemeral credentials'
     }
@@ -16,7 +16,7 @@ model {
     s3 = component {
       title 'RustFS'
       description 'S3 Object Store for inputs and results awaiting approval'
-      icon https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/rustfs.svg
+      icon /logos/rustfs.svg
 
       s3 -> submission.s3 'Transfers result'
       s3 -> data_owner 'Notifies'
@@ -25,19 +25,19 @@ model {
     keycloak = component {
       title 'TRE Keycloak'
       description 'Authenticates requests throughout the layer'
-      icon https://upload.wikimedia.org/wikipedia/commons/2/29/Keycloak_Logo.png
+      icon /logos/keycloak.svg
     }
     
     postgres = component {
       title 'Postgres'
       description 'Store project details, config'
-      icon https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/postgresql.svg
+      icon /logos/postgresql.svg
     }
 
     vault = component {
       title 'Vault'
       description 'Secret Manager'
-      icon https://raw.githubusercontent.com/hashicorp/web-unified-docs/refs/heads/main/content/vault/v1.21.x/img/logo-text.svg
+      icon /logos/vault.svg
 
     }
   }

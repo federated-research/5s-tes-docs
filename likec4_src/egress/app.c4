@@ -3,7 +3,7 @@ model {
     egress_ui = component {
       title 'Egress UI'
       description 'UI for for managing egress'
-      icon https://docs.federated-analytics.ac.uk/logo.svg
+      icon /logos/5s-tes-logo.svg
 
       -> egress_api 
       -> tre.tre_api 'Send approve / reject signal'
@@ -12,7 +12,7 @@ model {
     egress_api = component {
       title 'Egress API'
       description 'Backend for managing egress, handles movement of data and notification of relevant users'
-      icon https://docs.federated-analytics.ac.uk/logo.svg
+      icon /logos/5s-tes-logo.svg
 
       -> egress_ui
     }

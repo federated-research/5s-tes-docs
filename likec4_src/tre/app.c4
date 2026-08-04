@@ -3,7 +3,7 @@ model {
       tre_ui = component {
         title 'TRE Agent UI'
         description 'Interface for managing TRE configuration'
-        icon https://docs.federated-analytics.ac.uk/logo.svg
+        icon /logos/5s-tes-logo.svg
 
         -> tre_api
       }
@@ -11,7 +11,7 @@ model {
       tre_api = component {
         title 'TRE API'
         description 'Backend for management of the protected environment, handles job dispatch, movement of datasets and credentials'
-        icon https://docs.federated-analytics.ac.uk/logo.svg
+        icon /logos/5s-tes-logo.svg
 
         -> tre_ui
 
