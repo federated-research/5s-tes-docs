@@ -1,0 +1,51 @@
+model {
+  extend tre {
+    tre_app = service {
+      title 'TRE Agent'
+      description 'Application responsible for picking up and dispatching jobs to agents'
+    }
+    
+    camunda = component {
+      title 'Camunda'
+      description 'Credential Handler'
+      icon /logos/camunda.svg
+
+      -> tre.vault 'Send ephemeral credentials'
+    }
+
+    s3 = component {
+      title 'RustFS'
+      description 'S3 Object Store for inputs and results awaiting approval'
+      icon /logos/rustfs.svg
+
+      s3 -> submission.s3 'Transfers result'
+      s3 -> data_owner 'Notifies'
+    }
+
+    keycloak = component {
+      title 'TRE Keycloak'
+      description 'Authenticates requests throughout the layer'
+      icon /logos/keycloak.svg
+    }
+    
+    postgres = component {
+      title 'Postgres'
+      description 'Store project details, config'
+      icon /logos/postgresql.svg
+    }
+
+    vault = component {
+      title 'Vault'
+      description 'Secret Manager'
+      icon /logos/vault.svg
+
+    }
+  }
+}
+
+views {
+  view tre of tre {
+    title 'TRE / TRE Service'
+    include *
+  }
+}

@@ -1,0 +1,41 @@
+model {
+  extend submission {
+    submission_app = service {
+      title 'Submission Application'
+      description 'Application providing access to job submission queue and viewing of results'
+    }
+
+    postgres = component {
+      title 'Postgres'
+      description 'Stores projects, submissions, registered TREs, users'
+      icon /logos/postgresql.svg
+    }
+
+    rabbitmq = component {
+      title 'RabbitMQ'
+      description 'MQTT message broker'
+      icon /logos/rabbitmq.svg
+    }
+
+    sub_keycloak = component {
+      title 'Submission Keycloak'
+      description 'Authenticates requests throughout the layer'
+      icon /logos/keycloak.svg
+    }
+    
+    s3 = component {
+      title 'RustFS'
+      description 'S3 Object Store for inputs and approved results'
+      icon /logos/rustfs.svg
+
+      s3 -> researcher 'Downloads result'
+    }
+  }
+}
+
+views {
+  view submission of submission {
+    title 'Submission / Submission Service'
+    include *
+  }
+}
