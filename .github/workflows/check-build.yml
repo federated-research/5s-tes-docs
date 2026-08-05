@@ -20,22 +20,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: LikeC4 code generation
-        uses: likec4/actions@d36a6b8c87c1d540a3737302808755db435183b0 # v1.89.0
-        with:
-          codegen: react
-          path: likec4_src
-          output: likec4_react/likec4.generated.js
-          likec4-version: 1.59.2
-
-      - name: LikeC4 PNG export
-        uses: likec4/actions@d36a6b8c87c1d540a3737302808755db435183b0 # v1.89.0
-        with:
-          export: png
-          path: likec4_src
-          output: public/images/likec4
-          likec4-version: 1.59.2
-
       - name: Setup Node
         uses: actions/setup-node@v5
         with:
@@ -55,6 +39,18 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      # LikeC4 runs from the repo's own dependency rather than likec4/actions,
+      # whose image pins Playwright 1.56.1 browsers and cannot run likec4 1.58+.
+      # This supports manual layout snapshots rendering the same in CI as they do locally.
+      - name: LikeC4 code generation
+        run: npm run likec4:codegen
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: LikeC4 PNG export
+        run: npx likec4 export png likec4_src -o public/images/likec4
 
       - name: Check build
         run: npm run build
