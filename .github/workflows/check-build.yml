@@ -26,6 +26,7 @@ jobs:
           codegen: react
           path: likec4_src
           output: likec4_react/likec4.generated.js
+          likec4-version: 1.59.2
 
       - name: LikeC4 PNG export
         uses: likec4/actions@d36a6b8c87c1d540a3737302808755db435183b0 # v1.89.0
@@ -33,6 +34,7 @@ jobs:
           export: png
           path: likec4_src
           output: public/images/likec4
+          likec4-version: 1.59.2
 
       - name: Setup Node
         uses: actions/setup-node@v5
