@@ -1,4 +1,5 @@
 export default {
+  "deployment-steps": "Deploy a new Submission Layer",
   "add-realm-admin": "Add a Realm admin",
   "add-keycloak-user": "Add a Keycloak user", // Hidden from navigation for now because it not belongs to any card
   "add-new-researcher": "Add a new Researcher",
