@@ -6,7 +6,6 @@ model {
       icon /logos/5s-tes-logo.svg
 
       -> egress_api 
-      -> tre.tre_api 'Send approve / reject signal'
     }
 
     egress_api = component {
@@ -15,6 +14,7 @@ model {
       icon /logos/5s-tes-logo.svg
 
       -> egress_ui
+      -> tre.tre_api 'Send approve / reject signal'
     }
   }
 }
