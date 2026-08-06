@@ -17,15 +17,14 @@ model {
 
         // Job dispatch
         -> submission.rabbitmq 'Queries for jobs'
-        -> tre.camunda 'Requests credentials'
+        -> tre.camunda 'Requests ephemeral credentials'
         -> tre.vault 'Retrieves ephemeral credentials'
         -> tre.postgres 'Stores / retrieves data'
         -> execution 'Send configured job'
 
         // Result returns
-        -> tre.s3 'Store results needing review'
+        -> tre.s3 'Stores results/Copies approved results to S3 Submission Layer'
         -> egress 'Notifies results available'
-        -> tre.s3 'Trigger file transfer'
       }
   }
 }

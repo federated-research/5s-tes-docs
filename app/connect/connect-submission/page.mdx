@@ -18,13 +18,15 @@ This guide describes how to connect a TRE Agent to the Submission Layer using th
 - Deploy at least one TRE Agent.
 - Connect the TRE Agent to TES backend.
 - Get TRE administrator login credentials from the Submission Layer administrator to sign in to the Submission Layer.
-- Get the [Submission S3 admin credentials and server URLs](/co-ordinate/setup-sub-layer/configuration#s3-configuration) from the Federation Operator.
+- Get the Submission S3 API URL from the Federation Operator.
 
 ### Connect TRE Agent to Submission S3 storage:
 
 <Steps>
 
-#### Set the following configuration values in the TRE .env file :
+#### Configure TRE Agent to use Submission S3 storage:
+
+Set the following configuration in the TRE .env file:
 
 <Table>
   <thead>
@@ -35,25 +37,10 @@ This guide describes how to connect a TRE Agent to the Submission Layer using th
   </thead>
   <tbody>
     <Table.Tr>
-      <Table.Td>`SubmissionS3RootUser`</Table.Td>
-      <Table.Td>The root user for the Submission Layer S3 server.</Table.Td>
-    </Table.Tr>
-    <Table.Tr>
-      <Table.Td>`SubmissionS3RootPass`</Table.Td>
-      <Table.Td>The root password for the Submission Layer S3 server.</Table.Td>
-    </Table.Tr>
-    <Table.Tr>
       <Table.Td>`SubmissionS3ApiUrl`</Table.Td>
       <Table.Td>
         Point to Submission Layer S3 server, used by TRE Agent. For example,
         `http://host-of-submission-layer:9000`.
-      </Table.Td>
-    </Table.Tr>
-    <Table.Tr>
-      <Table.Td>`SubmissionS3ConsoleUrl`</Table.Td>
-      <Table.Td>
-        The URL for the Submission Layer's S3 admin console. For example,
-        `http://host-of-submission-layer:9001`.
       </Table.Td>
     </Table.Tr>
   </tbody>
@@ -61,9 +48,9 @@ This guide describes how to connect a TRE Agent to the Submission Layer using th
 
 <Callout type="info">
   Once a TES submission has finished executing and the outputs have been
-  approved by an Output checker the TRE Agent uses these configuration details
-  to connect to the Submission S3 and copy over the outputs for the Researcher
-  to access.
+  approved by an Output checker, the TRE Agent uses access keys with scoped
+  privileges (only read/write access to the target bucket) to connect to the
+  Submission S3 and copy over the outputs for the Researcher to access.
 </Callout>
 
 </Steps>
