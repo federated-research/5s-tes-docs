@@ -1,6 +1,6 @@
 export default {
   architecture: "System Architecture",
-  "sub-layer-components": "Submission Layer",
-  "tre-components": "TRE Agent",
+  "submission-layer": "Submission Layer",
+  "tre-agent": "TRE Agent",
   egress: "Egress",
 };
