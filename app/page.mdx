@@ -16,32 +16,48 @@ import CustomCard from "@/components/CustomCard";
     title="Learn"
     description="Understand the core concepts, standards, and users of Five Safes TES"
     links={[
-      { title: "What is Fives Safes TES ", href: "/learn/what-is-five-safes-tes" },
+      { title: "What is Fives Safes TES ", href: "/explanations/what-is-five-safes-tes" },
       { title: "OMOP", href: "/journeys/learn/omop" },
-      { title: "Personas", href: "/learn/personas" },
+      { title: "Personas", href: "/explanations/personas" },
       { title: "System Architecture", href: "/journeys/learn/system-architecture" },
     ]}
     CTA={{ text: <>Learn <ChevronRight /></>, href: "/journeys/learn" }}
     icon={<BookOpen size={24} />}
   />
 
-  <CustomCard
-    title="Connect"
-    description="Learn about how TRE can operate with Five Safes TES"
-    links={[
-        {
-        title: "Setup TRE Components",
-        href: "/connect/setup-tre/deployment-steps",
-      },
-      { title: "TRE data access", href: "/connect/controlling-tre-data-access"  },
-      { title: "Connect a TRE", href: "/connect/connect-submission" },
-      { title: "Projects and users", href: "/connect/approvals" },
-      { title: "TRE data access", href: "/journeys/connect/tre-data-access" },
-      { title: "Outputs approval", href: "/connect/approve-outputs" },
-    ]}
-    CTA={{ text: <>Connect <ChevronRight /></>, href: "/journeys/connect" }}
-    icon={<Unplug size={24} />}
-  />
+<CustomCard
+  title="Connect"
+  description="Learn about how TRE can operate with Five Safes TES"
+  links={[
+    {
+      title: "Setup TRE Components",
+      href: "/guides/manage-tre/deployment-steps",
+    },
+    {
+      title: "TRE data access",
+      href: "/guides/manage-tre/controlling-tre-data-access",
+    },
+    { title: "Connect a TRE", href: "/guides/manage-tre/connect-submission" },
+    { title: "Projects and users", href: "/guides/manage-tre/approvals" },
+    {
+      title: "TRE data access",
+      href: "/guides/manage-tre/control-tre-data-access",
+    },
+    {
+      title: "Outputs approval",
+      href: "/guides/egress-approval/approve-outputs",
+    },
+  ]}
+  CTA={{
+    text: (
+      <>
+        Connect <ChevronRight />
+      </>
+    ),
+    href: "/journeys/connect",
+  }}
+  icon={<Unplug size={24} />}
+/>
 
 <CustomCard
   title="Research"
@@ -72,12 +88,20 @@ import CustomCard from "@/components/CustomCard";
   description="Manage a consortium of TREs to deliver federated research studies"
   links={[
     {
-      title: "TREs, projects and users",
-      href: "/co-ordinate/entity-management",
+      title: "Setup a new project",
+      href: "/guides/manage-fed/setup-new-project",
+    },
+    {
+      title: "Register a TRE",
+      href: "/guides/manage-fed/register-a-tre",
+    },
+    {
+      title: "Add new researcher",
+      href: "/guides/manage-fed/add-new-researcher",
     },
     {
       title: "Setup a Submission Layer",
-      href: "/co-ordinate/setup-sub-layer/deployment-steps",
+      href: "/guides/manage-fed/deployment-steps",
     },
   ]}
   CTA={{
