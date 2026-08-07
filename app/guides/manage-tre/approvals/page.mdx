@@ -17,14 +17,14 @@ This guide describes how a TRE Operator approves Projects and Project membership
 
 ### Knowledge
 
-- Understand how the TRE Agent synchronises with the Submission Layer. [See Synchronisation](/connect/connect-submission#synchronisation)
+- Understand how the TRE Agent synchronises with the Submission Layer. [See Synchronisation](/guides/manage-tre/connect-submission#synchronisation)
 - Be familiar with the TRE Agent UI.
 
 ### Technical requirements
 
 - A deployed TRE Layer.
 - A TRE Administrator user. A Keycloak administrator must create a TRE administrator account with the `dare-tre-admin` role. See **Add Keycloak User**.
-- A connected TRE Agent. See [Connect a TRE Agent to the Submission Layer](/connect/connect-submission).
+- A connected TRE Agent. See [Connect a TRE Agent to the Submission Layer](/guides/manage-tre/connect-submission).
 
 ## Approve Projects and Memberships
 
@@ -45,6 +45,7 @@ Select the Project you want to review.
 The TRE Agent synchronises Projects from the Submission Layer at a regular interval.
 
 To change the synchronisation interval, a TRE operator can update the `syncSchedule` setting in the TRE Agent configuration.
+
 </Callout>
 
 ### Approve the Project
@@ -53,7 +54,7 @@ Navigate to the **Project Approval** section and choose whether to approve or re
 ![Review Project](/images/tre-layer/tre-project-review.png)
 
 <Callout type="warning">
-A rejected Project cannot be changed back to **Undecided** or **Approved**.
+  A rejected Project cannot be changed back to **Undecided** or **Approved**.
 </Callout>
 
 ### Approve Project Memberships
@@ -71,5 +72,5 @@ Once you have finished reviewing all memberships, select **Save Changes**.
 
 After approving the Project and its memberships, you can continue with:
 
-- Controlling TRE data access.
-- [Review and approve outputs](/connect/approve-outputs).
+- [Controlling TRE data access](/guides/manage-tre/control-tre-data-access).
+- [Review and approve outputs](/guides/egress-approval/approve-outputs).
