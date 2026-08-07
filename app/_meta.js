@@ -5,6 +5,7 @@ export default {
   introduction: "Introduction",
   explanations: "Explanations",
   guides: "How-to Guides",
+  tutorials: "Tutorials",
   references: "References",
   journeys: {
     // exclude routes until content published

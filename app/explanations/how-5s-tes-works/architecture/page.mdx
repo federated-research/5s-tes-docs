@@ -1,0 +1,113 @@
+---
+readingTime: PT10M
+audiences: everyone
+docType: explanation
+title: System Architecture
+---
+
+import { Callout } from "nextra/components";
+import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
+import Diagram from "@/components/c4_diagram";
+
+<DocMetadata />
+
+## Prerequisites
+
+- Understanding of [Five Safes TES](/introduction).
+
+## System Architecture
+
+The Five Safes TES (Task Execution Service) is designed to handle sensitive data analysis within a secure and controlled environment. The architecture followed by a Fan-out pattern for the implementation and is organized into multiple layers and application components.
+
+Aggregation is supported via external tools and after 5S-TES completes analysis tasks, users can run a dedicated aggregation tool to collect and summarise results.
+
+{/* TODO: link to an example of aggregation */}
+
+<figure>
+  <Diagram
+    alt_image="/images/likec4/deployments/parl.png"
+    alt_text="Illustrative context diagram for Five Safes TES architecture. Researcher interacts with submission layer, behind which three TREs are shown, each of which interact with the submission layer separately."
+    viewId="parl"
+  />
+  <figcaption
+    style={{ fontStyle: "italic", fontSize: "0.7em", marginTop: "8px" }}
+  >
+    Figure 1: Illustration of the context diagram for Five Safes TES
+    architecture. Click for interactive mode.
+  </figcaption>
+</figure>
+
+## Components Architecture
+
+The Five Safes TES is divided into multiple layers of process and multiple app stack as discussed below.
+
+**The layers of the architecture are:**
+
+- **Submission Layer**: Entrypoint for user requests, authentication, and authorisation.
+- **TRE Layer**: Core processing layer for data analysis.
+
+**The Five Safes TES app stack includes:**
+
+- **Submission App:** Handles user submissions.
+- **TRE Agent App:** Manages task execution within the TRE for data analytics.
+- **Egress App:** Checks and approve/reject the results of the analysis.
+
+<figure>
+  <Diagram
+    alt_image="/images/likec4/logic.png"
+    alt_text="Data flow through the Five Safe TES architecture."
+    viewId="logic"
+  />
+  <figcaption
+    style={{ fontStyle: "italic", fontSize: "0.7em", marginTop: "8px" }}
+  >
+    Figure 2: App structure and data flow within Five Safe TES. Click for
+    interactive mode, including data flow walkthrough.
+  </figcaption>
+</figure>
+<Callout type="info">
+  The data flow diagram above is interactive. Click twice on the diagram to
+  enter interactive mode, and then click on the blue 'Start' button at the top
+  of the diagram to enter the data flow walkthrough.
+</Callout>
+
+## Operational Overview
+
+The high level overview of working of the Five Safes TES is as follows:
+
+<u style={{ display: 'block', marginTop: '20px' }}>
+  <strong>Submission App</strong>
+</u>
+<div>
+
+1. The process begins with the end user or researcher submitting a request for the desired analysis through the Trusted Research Environments. Then, authentication and authorisation checks are performed to ensure the user is assigned to the relevant project.
+
+2. The request is then placed in a queue as a task for the corresponding nodes in the federated network and the researcher can track the stages of the analysis.
+
+</div>
+
+<u style={{ display: 'block', marginTop: '20px' }}>
+  <strong>TRE Agent App</strong>
+</u>
+<div>
+    1. The TRE Agent in the TRE Layer monitors the queue for new jobs (tasks). Once identified, TRE agent get the task and start the pre-processing of the task.
+
+    2. A tool called Camunda will dynamically inject the ephemeral credentials into the environment variables of the TES message, which Executor will use to connect to the database.
+
+    3. The standardised payload is sent to the Executor, then the analysis will be executed against TRE's restricted database.
+
+    4. The results of this analysis are then saved in storage at the TRE Layer.
+
+</div>
+
+<u style={{ display: 'block', marginTop: '20px' }}>
+  <strong>Egress App</strong>
+</u>
+<div>
+    1. After the analysis results are stored, the TRE notifies the data owner (a designated human reviewer) to approve the release of results.
+
+    2. The owner can now reviews the output and, if approved, authorises the egress.
+
+    3. Upon approval, the results are copied over to the Submission layer's storage, and finally, the researcher receives the analysis results.
+
+</div>

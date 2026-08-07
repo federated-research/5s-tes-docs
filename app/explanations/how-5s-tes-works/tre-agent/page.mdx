@@ -12,9 +12,31 @@ import Diagram from "@/components/c4_diagram";
 
 ## Prerequisites
 
-{/* TODO: add link to the context diagram */}
+- Understanding of [Five Safes TES System Architecture](/explanations/how-5st-works/architecture).
 
-- Understanding of [Five Safes TES Context C4 diagram](/context-c4-diagram).
+## Overview
+
+The TRE Agent handles the communication between the [Submission Layer](/explanations/how-5st-works/submission-layer) and a Trusted Research Environment.
+The TRE Agent polls out to the Submission Layer, gets a task, then sends the task to an implementation of the [GA4GH Task Execution Service](/standards/#task-execution-service-tes).
+Once the task is finished executing the TRE Agent sends the results to [Egress](/explanations/how-5st-works/egress).
+
+The code for TRE Agent is open source, and can be found on [Github](https://github.com/SwanseaUniversityMedical/5s-Tes).
+
+## Core Functionality
+
+- Polls the Submission Layer to retrieve new tasks
+- Submits tasks to a GA4GH TES implementation
+- Monitors task execution and collects results
+- Sends task outputs to the Egress service for approval
+- Maintains communication flow between the Submission Layer, TES, and Egress
+- Provides a API that can be used to integrate and build against.
+
+## Ideal Uses Cases
+
+- Orchestrating task execution inside a TRE
+- Connecting submission workflows to TES backends
+- Enabling controlled communication between TRE components
+- Supporting federated task execution across TREs
 
 ## Core Components
 
@@ -82,12 +104,15 @@ A TRE database is the database which the analysis query runs against.
 If a TRE database is deployed in cloud managed instances (for example, AWS RDS, Azure SQL DB Managed Instance, etc.), this 5 Safes TES implementation requires that you set the TRE Agent with the `admin` credentials of the TRE database, in order to create and revoke ephemeral credentials. This can be done by setting the environment variables `TRE_DATA_USER` and `TRE_DATA_PASSWORD` with the credentials of the user, more details [here](/5s-tes-docs/connect/setup-tre/configuration#general-app-configuration) .
 
 <Callout type="info">
-  - `admin` credentials are the ones used when creating or setting up the TRE DB instance. 
+  - `admin` credentials are the ones used when creating or setting up the TRE DB
+  instance. 
   - If the TRE decides to use PostgreSQL as the database, version 16
   or later is required. Because, in Postgres 16+, to revoke a user/role, either
   `superuser` or `admin` privilege is required. More details
   [here](https://www.postgresql.org/docs/16/sql-droprole.html). 
-  - A user created with the `CREATEROLE` permission can create ephemeral credentials but cannot revoke them. 
+  - A user created
+  with the `CREATEROLE` permission can create ephemeral credentials but cannot
+  revoke them. 
   - In the case where a TRE cannot not use `admin` credentials, the
   TRE database can be hosted in the same `postgresql` database instance, which
   keeps the local state of TRE Agent, and superuser credentials of the

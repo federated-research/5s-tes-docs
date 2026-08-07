@@ -13,7 +13,27 @@ import Diagram from "@/components/c4_diagram";
 
 ## Prerequisites
 
-- Understanding of [Five Safes TES Context C4 diagram](/context-c4-diagram).
+- Understanding of [Five Safes TES System Architecture](/explanations/how-5st-works/architecture).
+
+## Overview
+
+This is the entry point for a researcher. Approved researchers can submit tasks to a Project by interacting with the user interface, or through the API.
+
+The code for Submission is open source, and can be found on [Github](https://github.com/SwanseaUniversityMedical/5s-Tes).
+
+### Core Functionality
+
+- Provides an API and user interface for researchers to submit tasks to the TREs.
+- Authenticates and authorises approved researchers
+- Forwards validated tasks to the Trusted Research Environment agent for execution
+- Tracks the status of submitted tasks
+- Provides a API that can be used to integrate and build against.
+
+### Ideal Uses Cases
+
+- Entry point for researchers into a federated TRE system
+- Submitting and monitoring analysis tasks
+- Integrating external tools with the TRE task workflow
 
 ## Core Components
 
