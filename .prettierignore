@@ -6,4 +6,4 @@ app/guides/manage-tre/control-tre-data-access/page.mdx
 app/explanations/how-5s-tes-works/tre-agent/page.mdx
 app/co-ordinate/entity-management/add-keycloak-user/page.mdx
 app/tutorials/collecting-results/page.mdx
-app/tutorials/hello-world/page.mdx
+app/tutorials/setup-testenv/page.mdx
