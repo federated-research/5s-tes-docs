@@ -243,7 +243,7 @@ The final successful process should be like this:
 
 </Steps>
 
-### Stop the containers
+## Stop the containers
 
 To stop the containers, run the following command:
 
@@ -262,10 +262,10 @@ To start the containers again and submit submissions in the future:
   ```bash copy
   ./scripts/funnel.sh
   ```
-  <Callout type="info">
-    If there are any issues with the automated setup script for Funnel, or if
-    you prefer to set up Funnel manually, follow the instructions
-    [here](/guides/manage-tre/tes-backend/install-funnel).
+  <Callout type="warning">
+    By default, `vault` service in DemoStack is running in development mode. 
+    This means that the secrets are not persisted between restarts which will break the synchronization between TRE Agent and Submission Layer. 
+    To persist the secrets, you need to run the `vault` service in production mode. Step `3.2` [here](/guides/manage-fed/deployment-steps#configure-the-stack) can give you an example on how to do this.
   </Callout>
 
 {/* TODO: Add next steps when we have more pages/guides for contributor/integrator */}
