@@ -1,7 +1,7 @@
 ---
 readingTime: PT30M
 audiences: [contributor, integrator]
-title: Submitting to Five Safes TES
+title: Running Five Safes TES locally
 docType: tutorial
 ---
 
@@ -10,29 +10,25 @@ import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
 
 <DocMetadata />
 
-# 5S-TES DemoStack Quickstart
+# Run Five Safes TES locally
 
 <Callout type="warning">
   This is not intended to be a production deployment. To run these applications
   in a deployed environment, see their respective deployment documentation
 </Callout>
 
-DemoStack is a demonstration instance of the complete Five Safes TES, and it will be used in this Quickstart guide.
-
 The purpose of this guide is to allow you to run all the components of Five Safes TES in a single install locally, and guide you through sending your first "Hello World" submission to the Five Safes TES.
-This then will help you to explore how this weave can be useful for your use case,
-or as part of a development pathway.
 
 ## Prerequisites
 
 - [Docker](https://www.docker.com/) installed and running on your machine. Instructions can be found [here](https://uomresearchit.github.io/docker-introduction/index.html#installation-of-docker).
-- The Docker Compose files of Five Safes TES Weave need to be downloaded or cloned from the [GitHub repository](https://github.com/SwanseaUniversityMedical/5S-TES-deployment). If you have [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) installed, you can do clone the repository by running the following command:
+- The Docker Compose files of Five Safes TES need to be downloaded or cloned from the [GitHub repository](https://github.com/SwanseaUniversityMedical/5S-TES-deployment). If you have [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) installed, you can do clone the repository by running the following command:
 
   ```bash copy
   git clone https://github.com/SwanseaUniversityMedical/5S-TES-deployment.git
   ```
 
-- Before running the quickstart, we recommend reading the [Overview](/five_safes_tes/reference_implementation/overview) and [Core Components](/five_safes_tes/reference_implementation/core_components) pages to gain a basic understanding of the stack.
+- Basic understanding of the architecture and workflow of Five Safes TES. See [Overview](/explanations/how-5s-tes-works/architecture) for more details.
 
 ## Sending Hello World submission
 
@@ -47,87 +43,96 @@ However, in the DemoStack, these roles are played by a single user (you) in all 
 
 <Steps>
 
-### Start the `starter.sh` automation scripts
-
-The DemoStack includes a `starter.sh` automation script that automates the initial setup process. This script will:
-
-1. Start all Docker Compose services in `SeedDemoData = true` to seed the demo data and instances.
-2. Install and configure the MinIO client (mc).
-3. Fetch MinIO access keys for [Funnel](https://github.com/ohsu-comp-bio/funnel), which is chosen as the TES executor for the DemoStack quickstart.
-4. Installs and setup the Funnel for executing the TES tasks.
-5. Generate the Funnel configuration file.
-6. Start the Funnel TES server.
-
-Follow these steps to run the `starter.sh` automation script:
+### Seed demo data
 
 - **Within the 5S-TES-deployment root directory**, change to the `DemoStack` directory:
-  ```
+
+  ```bash copy
   cd DemoStack
   ```
-- **Give permission to execute the `starter.sh` automation script**:
-  ```bash copy
-  chmod +x scripts/starter.sh
-  ```
-  <Callout type="info">
-    The command above only requires if you run this for the first time.
-  </Callout>
-- **Run the `starter.sh` automation script:**
-  ```bash copy
-  ./scripts/starter.sh
-  ```
-  This will start the stack with the seeding of some demo data and instances.
 
-Wait until all the services are up and running and the `starter.sh` script
-shows the following message in the terminal. The status of the services can be checked by running `docker stats` in a new terminal window.
+- Start the stack by running the following command:
+  ```bash copy
+  docker compose up -d
+  ```
 
-```bash
-...
-Creating funnel-config.yml...
-Starting Funnel...
-server               Server listening
-httpPort             8000
-rpcAddress           :9090
-time                 2026-02-25T12:47:16Z
-```
+By default, the stack will start with `SeedDemoData = true`, which will seed the demo data and instances.
+
+Since the "SeedDemoData" is true for the first run, a project named
+**Testing** and a TRE named **DEMO** are automatically seeded in the
+Submission layer. Once the Docker Compose stack has started successfully, if
+the seeded project and TRE do not appear yet, please allow approximately 2
+minutes for the TRE Agent to complete the migration of the demo projects and
+sync.
 
 <Callout type="info">
 Once the `keycloak` service has started, the configuration files for three [realms](https://www.keycloak.org/docs/latest/server_admin/index.html#_configuring-realms) `DARE-Control`, `DARE-TRE` and `Data-Egress` will be imported and applied automatically. 
-  These realms control access to the Submission Layer, TRE Agent, and Egress Layer respectively. In the DemoStack configuration, the admin user `globaladminuser` will be created in each realm.
+  These realms control access to the Submission Layer, TRE Agent, and Egress Layer respectively. In the DemoStack configuration, the admin user `globaladminuser` will be created in each realm with the following credentials:
+
+```yaml
+Username: globaladminuser
+Password: password123
+```
+
+</Callout>
+
+### Start Funnel
+
+To ease the setup process, we have included a script to start Funnel. This will automatically configure Funnel and start it.
+
+- Open a separate terminal window and navigate to the DemoStack directory:
+  ```bash copy
+  cd DemoStack
+  ```
+- Run the following command to start Funnel:
+  ```bash copy
+  ./scripts/funnel.sh
+  ```
+  <Callout type="info">
+    - If there are any issues with the automated setup script for Funnel, or if
+    you prefer to set up Funnel manually, follow the instructions
+    [here](/guides/manage-tre/tes-backend/install-funnel).
+    - You may need to give permission to execute the `funnel.sh` script by running the command `chmod +x scripts/funnel.sh`.
+  </Callout>
+
+### Enable Syncing and Scanning in the TRE
+
+- Login to the Submission Layer at [localhost:7220](http://localhost:7220) using the Keycloak credentials below - these are the credentials of the admin user of the TRE `DEMO` in Submission Layer's realm:
+
+```yaml
+Username: accessfromtretosubmission
+Password: password123
+```
+
+- Open the TRE tab and navigate to your TRE.
+- Download the Agent Onboarding Configuration JSON file by clicking the top right corner button `Download Config`.
+- Sign in to the TRE Agent UI using the credentials below - these are the credentials of the admin user of the TRE `DEMO` in TRE Agent's realm:
 
 ```yaml copy
 Username: globaladminuser
 Password: password123
 ```
 
-  </Callout>
+- Navigate to Deployment Admin tab.
+- Upload the onboarding JSON downloaded from the Submission Layer. The TRE Agent will then begin synchronising automatically.
+- Verify the syncing status by checking the Button in the top-right corner of the Deployment Admin page which will display Sync Active if the syncing is successful. The TRE will also appear `Online` in the Submission Layer.
 
-### Enable Syncing and Scanning in the TRE
-
-Follow this [guide](/tre_agent/guides/connecttosubmission) to connect the TRE to Submission and enable syncing.
+More details can be found [here](/guides/manage-tre/connect-submission#connect-tre-agent-to-submission).
 
 ### Approve the Project access to the TRE
 
-<Callout>
-  Since the "SeedDemoData" is true for the first run, a project named
-  **Testing** and a TRE named **DEMO** are automatically seeded in the
-  Submission layer. Once the Docker Compose stack has started successfully, if
-  the seeded project and TRE do not appear yet, please allow approximately 2
-  minutes for the TRE Agent to complete the migration of the demo projects and
-  sync.
-</Callout>
+Follow this [guide](/guides/manage-tre/approvals#approve-projects-and-memberships) to approve the project access to the TRE.
 
-Follow this [guide](/tre_agent/guides/TREManagerApprovingProject) to approve the project access to the TRE.
-
-To make sure that the project has been approved and [Submission Layer](/five_safes_tes/reference_implementation/core_components#submission-layer) is in sync with [TRE Agent](/five_safes_tes/reference_implementation/core_components#tre-api), log into the Submission Layer at [localhost:7220](http://localhost:7220), using the Keycloak credentials above. Select the project, and navigate to the **_TREs_** section. You should see **_Approved_** status for the TRE.
+To make sure that the project has been approved and Submission Layer is in sync with TRE Agent, log into the Submission Layer at [localhost:7220](http://localhost:7220), using the Keycloak credentials above. Select the project, and navigate to the **_TREs_** section. You should see **_Approved_** status for the TRE.
 
 ![Screenshot of the project approval](/images/tutorials/ProjectApproved.png)
 
 ### Prepare to send the first submission
 
-To send the first submission, you need to disable simulation mode in DemoStack by doing the following:
+To send the first submission, you need to disable simulation mode in DemoStack by making sure the following settings are set:
 
-- Set `SeedDemoData` to `false`
-- Set `UseTESK` to `true`
+- `SeedDemoData=false`
+- `UseTESK=true`
 
 This can be done manually by editing the `.env` file and restarting the Docker Compose services or by running the `submission-ready.sh` automation script.
 
@@ -148,8 +153,11 @@ chmod +x scripts/submission-ready.sh
 <Callout type="info">
   The command above only requires if you run this for the first time.
 </Callout>
-3. Run the `submission-ready.sh` automation script: ```bash copy
-./scripts/submission-ready.sh ```
+3. Run the `submission-ready.sh` automation script:
+
+```bash copy
+./scripts/submission-ready.sh
+```
 
 This script will automatically do the required configuration changes, make the stack ready for submission and restart the Docker Compose services.
 
@@ -214,8 +222,8 @@ This submits a simple task that:
 - captures the container output in a file and saves it to the `/outputs` folder in MinIO ("outputs" section)
 
 <Callout type="info">
-  More information around submitting different TES Tasks can be found in the
-  [TES Wizard guide](/submission/guides/teswizard).
+  More information around submitting TES Tasks using the TES Wizard can be found
+  [here](/tutorials/submit-to-5s-tes#web-application).
 </Callout>
 
 ### Tracking and approving the submission results
@@ -223,7 +231,7 @@ This submits a simple task that:
 You will be redirected to the list of Submissions, click onto the submission you just sent.
 
 You should be able to see the status of the submission. Once it has been processed, the status will be set to: `Requested Egress`.
-This means that the results are waiting for egress approval. Follow this [guide](/egress/guides/EgressManagerApprovingRelease) to approve the submission results.
+This means that the results are waiting for egress approval. Follow this [guide](/guides/egress-approval/approve-outputs#review-output-requests) to approve the submission results.
 
 ### View the submission results
 
@@ -257,11 +265,7 @@ To start the containers again and submit submissions in the future:
   <Callout type="info">
     If there are any issues with the automated setup script for Funnel, or if
     you prefer to set up Funnel manually, follow the instructions
-    [here](/five_safes_tes/reference_implementation/TES/install_funnel).
+    [here](/guides/manage-tre/tes-backend/install-funnel).
   </Callout>
 
-## Next steps
-
-Now you have sent your first submission, you can try to send a different type of submission, such as a SQL query or a custom image, with a different project and TRE using this [guide](/submission/tasks/run_analysis) or the [TES Wizard](/submission/guides/teswizard).
-
-If you encounter any issues, please raise an issue [here](https://github.com/federated-research/docs/issues).
+{/* TODO: Add next steps when we have more pages/guides for contributor/integrator */}
