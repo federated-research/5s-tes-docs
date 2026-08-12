@@ -18,15 +18,15 @@ This guide describes how to connect a TRE Agent to the Submission Layer using th
 - Deploy at least one TRE Agent.
 - Connect the TRE Agent to TES backend.
 - Get TRE administrator login credentials from the Submission Layer administrator to sign in to the Submission Layer.
-- Get the Submission S3 API URL from the Federation Operator.
+- Get the Submission S3 API URL, Submission Keycloak URL, Submission API Address URL and Submission API Keycloak Secret from the Federation Operator.
 
-### Connect TRE Agent to Submission S3 storage:
+## Steps
 
 <Steps>
 
-#### Configure TRE Agent to use Submission S3 storage:
+### Update the TRE Agent configuration:
 
-Set the following configuration in the TRE .env file:
+Set the following configuration in the TRE Agent .env file:
 
 <Table>
   <thead>
@@ -43,6 +43,29 @@ Set the following configuration in the TRE .env file:
         `http://host-of-submission-layer:9000`.
       </Table.Td>
     </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`SUBMISSION_KEYCLOAK_URL`</Table.Td>
+      <Table.Td>
+        The URL of the Submission Layer's Keycloak server, for example,
+        `http://keycloak:8080` (for default local Keycloak server) or
+        `https://submission-keycloak.example.com` (for a production Submission
+        Layer Keycloak server).
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`SubmissionAPIAddressURL`</Table.Td>
+      <Table.Td>
+        The Submission API address URL. For example,
+        `http://host-of-submission-layer:5034`.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`SubmissionAPIKeyCloakSecret`</Table.Td>
+      <Table.Td>
+        The OpenID secret for the Submission API Keycloak client
+        `Dare-Control-API`.
+      </Table.Td>
+    </Table.Tr>
   </tbody>
 </Table>
 
@@ -53,13 +76,7 @@ Set the following configuration in the TRE .env file:
   Submission S3 and copy over the outputs for the Researcher to access.
 </Callout>
 
-</Steps>
-
-### Connect TRE Agent to Submission
-
-<Steps>
-
-#### Download the TRE Onboarding Configuration
+### Download the TRE Onboarding Configuration
 
 1. Sign in to the Submission Layer as the assigned TRE administrator.
 2. Open the TRE tab and navigate to your TRE.
@@ -73,7 +90,7 @@ Set the following configuration in the TRE .env file:
 - TRE ID
 - TRE Name
 
-#### Upload the Onboarding Configuration
+### Upload the Onboarding Configuration
 
 1. Sign in to the TRE Agent UI.
 2. Navigate to **Deployment Admin** tab.
@@ -86,7 +103,7 @@ Set the following configuration in the TRE .env file:
 - Store the service account credentials securely in Vault.
 - Begin synchronising with the Submission Layer.
 
-#### Verify the Connection
+### Verify the Connection
 
 Once onboarding has completed successfully:
 
@@ -120,7 +137,7 @@ To change the synchronisation interval, a TRE Operator can update the `syncSched
 The TRE Agent performs health checks at a regular interval to verify that its connection to the Submission Layer and supporting services remains healthy.
 To change the health check interval, a TRE Operator can update the `healthCheckSchedule` setting in the TRE Agent configuration.
 
-#### During each health check, the TRE Agent verifies that:
+**During each health check, the TRE Agent verifies that:**
 
 - The Submission Layer endpoint is reachable.
 - The Egress endpoint is valid and reachable.
@@ -132,7 +149,7 @@ The current health status is displayed in the **Deployment Admin** page under th
 
 Once any configuration or connectivity issues have been resolved, the Synchronisation can be restarted from the **Deployment Admin** page by selecting **Enable Sync**.
 
-### What's next?
+## What's next?
 
 - [Approving Projects/Memberships](/guides/manage-tre/approvals)
 - [Review & Approve Outputs](/guides/egress-approval/approve-outputs)
