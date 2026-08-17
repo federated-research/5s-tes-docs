@@ -10,25 +10,14 @@ import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
 
 <DocMetadata />
 
-# Submitting to Five Safes TES
+# Submit an analysis to Five Safes TES
 
 Researchers interact with Five Safes TES (5S-TES) using the submission layer.
 The submission layer ensures [two of the Five Safes](/introduction#the-five-safes-framework): **Safe People** and **Safe Projects**.
-This means you have to become a user, and be added to a project.
+This means you have to become a user, and be added to an approvedproject.
 The submission layer has an HTTP API which accepts [TES messages](/explanations/concepts/tes#tes-messages-for-5s-tes). For convenience a [web application](#web-application) and [Python client library](#workbench) have been provided.
 
 ## Background
-
-### Projects
-
-5S-TES users do not interact directly with Trusted Research Environments (TREs).
-Instead, data access in TREs is scoped by a project, which has a defined time for which it is valid, and defined data users can access through it.
-This means that you have to request, and be approved for, permission to make submissions to a project.
-
-### Submissions
-
-A submission means sending a [Five safes TES message](/explanations/concepts/tes#tes-messages-for-5s-tes) to the submission layer.
-The submission layer then uses [tags](/explanations/concepts/tes#use-of-tags-in-5s-tes) to assign the task to a project and which TREs should run it.
 
 ### Authentication
 
@@ -40,33 +29,6 @@ To get an access token, select "API access token" in the top ribbon of the Submi
   Tokens expire. The time and date at which your current token expires are shown
   above the token.
 </Callout>
-
-### Executors
-
-TES tasks run through executors, specified in the `executors` field of a TES message.
-An example TES message could contain
-
-```json
-{
-    ...,
-    "executors": [
-        {
-            "image": "harbor.federated-analytics.ac.uk/5s-tes-analysis-tools/5s-tes-analysis-tools-tre-sqlpg:1.0.0",
-            "command": [
-                     "--Output=/outputs/output.csv",
-                     "--Query=<SOME SQL>"
-            ],
-        }
-    ]
-}
-```
-
-This tells the TES engine in each TRE to load the `"image"` of the container at the specified URL.
-A container is like a lightweight virtual machine wrapping some software, which offers benefits in security and reproducibility.
-When the container is loaded, the specified `"command"` is then executed inside the container.
-The TES standard lets you run any sequence of containers, so 5s-TES theoretically could too.
-In practice, the executors you can run in 5S-TES TREs will depend on which containers the TRE will allow you to.
-The examples in this documentation run on containers too, but will not cover all research needs.
 
 ## Preparing for a submission
 
@@ -208,7 +170,7 @@ The TRE agent will amend this to comply with egress policy.
 
 ###### Executors
 
-This section contains details of your [executor(s)](#executors).
+This section contains details of your [executor(s)](/explanations/concepts/tes#executors).
 
 - **Docker image**: Executors are containers. This textbox allows you to specify which.
 - **Workdir**: The working directory used by this container.
