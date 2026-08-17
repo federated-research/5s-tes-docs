@@ -34,7 +34,7 @@ The purpose of this guide is to help you set up a local test environment for Fiv
 
 <Callout>
 In a production environment, submitting can completing a task involves multiple roles across applications. In the other words, Researchers, TRE Administrators, Submission Layer Administrators, 
-and Egress Layer Administrators each have specific responsibilities throughout the submission lifecycle. For example, TRE Administrators enable syncing/scanning and approve the project access to the TRE in step 3 and 4, Researchers complete steps 6 and 8 in the Submission Layer, and Egress Administrators review the submission results in step 7.
+and Egress Layer Administrators each have specific responsibilities throughout the submission lifecycle. For example, TRE Administrators enable syncing/scanning and approve the project access to the TRE in step 3 and 4, Researchers complete steps 5 and 7 in the Submission Layer, and Egress Administrators review the submission results in step 6.
 
 In this guide, these roles are combined into a single user (you) who will perform all of these actions across the different applications.
 
@@ -57,12 +57,10 @@ In this guide, these roles are combined into a single user (you) who will perfor
 
 By default, the stack will start with `SeedDemoData = true`, which will seed the demo data and instances.
 
-Since the "SeedDemoData" is true for the first run, a project named
+Since "SeedDemoData" is true by default, a project named
 **Testing** and a TRE named **DEMO** are automatically seeded in the
-Submission layer. Once the Docker Compose stack has started successfully, if
-the seeded project and TRE do not appear yet, please allow approximately 2
-minutes for the TRE Agent to complete the migration of the demo projects and
-sync.
+Submission layer. If the Docker Compose stack is running successfully, allow approximately 2
+minutes for the TRE Agent to Sync the Projects across from the Submission Layer
 
 <Callout type="info">
 Once the `keycloak` service has started, the configuration files for three [realms](https://www.keycloak.org/docs/latest/server_admin/index.html#_configuring-realms) `DARE-Control`, `DARE-TRE` and `Data-Egress` will be imported and applied automatically. 
@@ -125,47 +123,6 @@ Follow this [guide](/guides/manage-tre/approvals#approve-projects-and-membership
 To make sure that the project has been approved and Submission Layer is in sync with TRE Agent, log into the Submission Layer at [localhost:7220](http://localhost:7220), using the Keycloak credentials above. Select the project, and navigate to the **_TREs_** section. You should see **_Approved_** status for the TRE.
 
 ![Screenshot of the project approval](/images/tutorials/ProjectApproved.png)
-
-### Prepare to send the first submission
-
-To send the first submission, you need to disable simulation mode in DemoStack by making sure the following settings are set:
-
-- `SeedDemoData=false`
-- `UseTESK=true`
-
-This can be done manually by editing the `.env` file and restarting the Docker Compose services or by running the `submission-ready.sh` automation script.
-
-Follow these steps to run the `submission-ready.sh` automation script:
-
-1. Open a new terminal window and navigate to the DemoStack directory:
-
-```bash copy
-cd DemoStack
-```
-
-2. Give permission to execute the `submission-ready.sh` automation script:
-
-```bash copy
-chmod +x scripts/submission-ready.sh
-```
-
-<Callout type="info">
-  The command above only requires if you run this for the first time.
-</Callout>
-3. Run the `submission-ready.sh` automation script:
-
-```bash copy
-./scripts/submission-ready.sh
-```
-
-This script will automatically do the required configuration changes, make the stack ready for submission and restart the Docker Compose services.
-
-<Callout>
-  Tips: You can always start or restart the Docker Compose services (e.g.,after
-  editing the `.env` file) by running the command
-  `./scripts/submission-ready.sh`. This will keep the stack in the state that is
-  ready for you to send the submission.
-</Callout>
 
 ### Send a Hello World submission
 
@@ -263,7 +220,7 @@ To start the containers again and submit submissions in the future:
   ```
   <Callout type="warning">
     By default, `vault` service in DemoStack is running in development mode. 
-    This means that the secrets are not persisted between restarts which will break the synchronization between TRE Agent and Submission Layer. 
+    This means that the secrets are not persisted between restarts, which will break the synchronization between TRE Agent and Submission Layer. 
     To persist the secrets, you need to run the `vault` service in production mode. Step `3.2` [here](/guides/manage-fed/deployment-steps#configure-the-stack) can give you an example on how to do this.
   </Callout>
 
