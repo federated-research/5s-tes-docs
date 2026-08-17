@@ -3,4 +3,5 @@ export default {
   "submission-layer": "Submission Layer",
   "tre-agent": "TRE Agent",
   egress: "Egress",
+  entities: "Core entities",
 };
