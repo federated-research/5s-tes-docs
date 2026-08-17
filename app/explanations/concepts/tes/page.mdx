@@ -33,12 +33,12 @@ The reference documentation for TES messages specifies the standard for [creatin
 | `volumes`     | Shared volumes that the containers can use to share data among themselves                                                                                                                                                                                 |
 | `tags`        | optional in TES, but important for orchestration by the submission layer                                                                                                                                                                                  |
 
-### Use of tags in 5S-TES
+### Tags
 
 In TES, the `tags` field is "used to store meta-data and annotations about a task".
 However, in 5S-TES, this has been overloaded so that two tags are essential.
 
-A `Project` tag must contain the name of an approved project in the submission layer
+A `Project` tag must contain the name of an approved [project](/explanations/how-5s-tes-works/entities#projects) in the submission layer
 
 A `tres` tag must contain a list of TREs that should run the task, separated by a pipe character (|).
 
