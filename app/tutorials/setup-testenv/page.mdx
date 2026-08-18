@@ -210,19 +210,14 @@ docker compose down
 To start the containers again and submit submissions in the future:
 
 - Make sure you are in the `DemoStack` directory.
-- Run the following command to run the stack not in the simulation mode:
+- Run the following command to run the stack:
   ```bash copy
-  ./scripts/submission-ready.sh
+  docker compose up -d
   ```
 - Then start Funnel by running the following command:
   ```bash copy
   ./scripts/funnel.sh
   ```
-  <Callout type="warning">
-    By default, `vault` service in DemoStack is running in development mode. 
-    This means that the secrets are not persisted between restarts, which will break the synchronization between TRE Agent and Submission Layer. 
-    To persist the secrets, you need to run the `vault` service in production mode. Step `3.2` [here](/guides/manage-fed/deployment-steps#configure-the-stack) can give you an example on how to do this.
-  </Callout>
 
 ## Next steps
 
