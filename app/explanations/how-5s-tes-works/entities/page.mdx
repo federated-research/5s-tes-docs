@@ -1,0 +1,25 @@
+---
+readingTime: PT5M
+audiences: [everyone]
+docType: explanation
+title: Core entities in Five Safes TES
+---
+
+import { Callout } from "nextra/components";
+import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
+import Diagram from "@/components/c4_diagram";
+
+<DocMetadata />
+
+# Core entities in Five Safes TES
+
+## Projects
+
+5S-TES users do not interact directly with Trusted Research Environments (TREs).
+Instead, data access in TREs is scoped by a Project, which is valid for a defined time, and has defined data that users can access through it.
+This means that Researchers have to request permission, and be granted approval, to make submissions to a Project.
+
+## Submissions
+
+A submission means sending a [Five safes TES message](/explanations/concepts/tes#tes-messages-for-5s-tes) to the submission layer.
+The submission layer then uses [tags](/explanations/concepts/tes#tags) to allocate the task to a Project and get it ready for relevant TREs to pick up.

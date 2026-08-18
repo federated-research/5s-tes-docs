@@ -16,10 +16,10 @@ import CustomCard from "@/components/CustomCard";
     title="Learn"
     description="Understand the core concepts, standards, and users of Five Safes TES"
     links={[
-      { title: "What is Fives Safes TES ", href: "/explanations/what-is-five-safes-tes" },
-      { title: "OMOP", href: "/journeys/learn/omop" },
+      { title: "What is Fives Safes TES ", href: "/introduction" },
+      { title: "OMOP", href: "/explanations/concepts/omop" },
       { title: "Personas", href: "/explanations/personas" },
-      { title: "System Architecture", href: "/journeys/learn/system-architecture" },
+      { title: "System Architecture", href: "/explanations/how-5s-tes-works/architecture" },
     ]}
     CTA={{ text: <>Learn <ChevronRight /></>, href: "/journeys/learn" }}
     icon={<BookOpen size={24} />}
@@ -35,7 +35,7 @@ import CustomCard from "@/components/CustomCard";
     },
     {
       title: "TRE data access",
-      href: "/guides/manage-tre/controlling-tre-data-access",
+      href: "/guides/manage-tre/control-tre-data-access",
     },
     { title: "Connect a TRE", href: "/guides/manage-tre/connect-submission" },
     { title: "Projects and users", href: "/guides/manage-tre/approvals" },
@@ -121,10 +121,6 @@ import CustomCard from "@/components/CustomCard";
     links={[
       { title: "System Architecture", href: "/explanations/how-5s-tes-works/architecture" },
       { title: "Setup a test environment", href: "/tutorials/setup-testenv" },
-      { title: "Explore and test locally", href: "/journeys/integrate/explore-and-test-locally" },
-      { title: "Submission API reference", href: "/journeys/integrate/submission-api-reference" },
-      { title: "TRE Agent API reference", href: "/journeys/integrate/tre-agent-api-reference" },
-      { title: "Egress API reference", href: "/journeys/integrate/egress-api-reference" },
     ]}
     CTA={{ text: <>Integrate <ChevronRight /></>, href: "/journeys/integrate" }}
     icon={<Boxes size={24} />}
@@ -135,10 +131,7 @@ import CustomCard from "@/components/CustomCard";
     title="Contribute"
     description="Learn about how to contribute to Five Safes TES"
     links={[
-      { title: "Setup a dev environment", href: "/journeys/contribute/setup-devenv" },
-      { title: "System Architecture", href: "/explanations/how-5s-tes-works/architecture" },
       { title: "Components Architecture", href: "/explanations/how-5s-tes-works/architecture#components-architecture" },
-      { title: "Contributing guide", href: "/journeys/contribute/contributing-guide" },
     ]}
     CTA={{ text: <>Contribute <ChevronRight /></>, href: "/journeys/contribute" }}
     icon={<Merge size={24} />}
