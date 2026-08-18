@@ -66,15 +66,18 @@
 
   position: absolute;
 
-  top: 22px;
+  top: 30px;
   left: calc(50% + 22px);
-  right: calc(-50% + 22px);
+  right: calc(-50% + 5px);
 
   height: 2px;
 
   background: var(--journey-line);
 
   z-index: 0;
+}
+.journey-step:last-child::after {
+  display: none;
 }
 
 /* -------------------------------------------------------
@@ -153,29 +156,6 @@
   text-align: center;
 
   overflow-wrap: anywhere;
-}
-
-/* -------------------------------------------------------
-     Arrow
-  ------------------------------------------------------- */
-
-.journey-arrow {
-  position: absolute;
-
-  top: 15px;
-  right: 0;
-
-  color: var(--journey-muted);
-
-  font-size: 0.9rem;
-
-  opacity: 0;
-
-  transform: translateX(-4px);
-
-  transition:
-    opacity 150ms ease,
-    transform 150ms ease;
 }
 
 /* -------------------------------------------------------
