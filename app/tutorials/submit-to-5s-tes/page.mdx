@@ -29,6 +29,7 @@ The submission layer has an HTTP API which accepts [TES messages](/explanations/
 ## Methods
 
 Once you have access to the submission layer, you can make submissions using Workbench or the web application (aka. the TES wizard).
+{/* TODO: Will separate this into two pages with better guidance for each */}
 
 ### Workbench
 
@@ -103,9 +104,7 @@ Below are the steps to make a submission using the web application.
 - In the Submissions view, you will be shown a button to make a new submission. Click the `Create Submission` button, and then select the TES wizard to access the Wizard.
   ![A screenshot of the Submissions view, highlighting the button used for the wizards](/images/submit-tes/submissions-view.png)
 
-#### Submission layer wizards
-
-When making a submission using the submission layer web application, you can use the TES wizard.
+#### Choose a wizard
 
 There are three options:
 
@@ -114,38 +113,26 @@ There are three options:
 3. **Raw JSON**: Write [a TES message](/explanations/concepts/tes#tes-messages-for-5s-tes) from scratch for more complex requirements.
 
 **Raw JSON**
+
 The Raw JSON wizard has the simplest interface: a single text box for writing a TES message.
 This includes syntax highlighting and formatting.
 
-**Common features**
-The other wizards have some options in common.
+**Simple SQL Query**
 
-![A screenshot showing the common features of the SQL and Custom image wizards](/images/submit-tes/wizard-common-elements.png)
+Apart from the mandatory inputs for TES Name and TREs selection, the Simple SQL Query wizard has a single additional element: a text box for writing a SQL query.
 
-| Field name      | Required? |                                                                                                                                                                          |
-| --------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| TES Name        | ✅        | A text box that populates the `name` field of a TES message, and should be a name that you can recognise, as it is used in the web application as a label for this task. |
-| TES description |           | A text box for an optional longer description of the TES message, which populates the `description` field of a TES message.                                              |
-| Select TREs     | ✅        | Checkboxes showing the TREs available to run tasks on this project. This part of the user interface also shows which of these TREs are online.                           |
+**Custom image**
 
-##### Simple SQL Query
+Apart from the mandatory inputs for TES Name and TREs selection, the custom image wizard provides several more options for running tasks.
 
-The Simple SQL Query wizard has a single additional element: a text box for writing a SQL query.
-
-##### Custom image
-
-![A screenshot showing the Custom image interface](/images/submit-tes/custom-image-wizard.png)
-
-The custom image wizard provides several more options for running tasks.
-
-###### Data input
+1. Data input
 
 If the TREs support it, you can provide a path to download extra data for input.
 
 - **Path**: a textbox to provide the path from which to collect data
 - **Type**: a selection box where you can choose whether your input is a `FILE` or `DIRECTORY`.
 
-###### Data output
+2. Data output
 
 You can specify where your output is stored.
 The TRE agent will amend this to comply with egress policy.
@@ -154,13 +141,19 @@ The TRE agent will amend this to comply with egress policy.
 - **Type**: a selection box where you can choose whether your output is a `FILE` or `DIRECTORY`.
 - **URL**: A text box to specify a URL for storing your data.
 
-###### Executors
+3. Executors
 
 This section contains details of your [executor(s)](/explanations/concepts/tes#executors).
 
 - **Docker image**: Executors are containers. This textbox allows you to specify which.
 - **Workdir**: The working directory used by this container.
 - **Commands**: A textbox for the commands to pass to the container
+
+4. Environment variables
+
+Some containers will need some environment variables to be passed to them to work. You do not need to specify all of these; for example for many TREs, you will not have database credentials and these will be populated for you.
+
+![A screenshot showing the Custom image interface](/images/submit-tes/custom-image-wizard.png)
 
 <Callout type="info">
 
@@ -181,9 +174,7 @@ becomes
 
 </Callout>
 
-- **Environment variables**: Some containers will need some environment variables to be passed to them to work. You do not need to specify all of these; for example for many TREs, you will not have database credentials and these will be populated for you.
-
-##### Submit task
+#### Submit your task
 
 For all the wizards, there is a button at the bottom to submit your task.
 
