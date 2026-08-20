@@ -15,4 +15,8 @@ export default {
   five_safes_tes: {
     display: "hidden",
   },
+  // Patterns URL redirect, never show in nav
+  federated_research_patterns: {
+    display: "hidden",
+  },
 };
