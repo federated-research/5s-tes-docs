@@ -2,15 +2,11 @@ export default {
   index: {
     display: "hidden",
   },
-  introduction: "Introduction",
+  introduction: "Overview",
   explanations: "Explanations",
   guides: "How-to Guides",
   tutorials: "Tutorials",
   references: "References",
-  journeys: {
-    // exclude routes until content published
-    display: "hidden",
-  },
   // Welcome Report URL redirect, never show in nav
   five_safes_tes: {
     display: "hidden",
