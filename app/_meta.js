@@ -2,8 +2,7 @@ export default {
   index: {
     display: "hidden",
   },
-  introduction: "Introduction",
-  journeys: "Journeys",
+  introduction: "Overview",
   explanations: "Explanations",
   guides: "How-to Guides",
   tutorials: "Tutorials",
