@@ -1,63 +1,47 @@
 ---
-docType: journey
 title: Connect
-asIndexPage: true
+readingTime: PT15M
+audiences: tre-operator
+docType: journey
 ---
 
-import Journey from "@/components/journey/Journey";
+import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
+import { Steps } from "nextra/components";
 
-<Journey
-  direction="horizontal"
-  steps={[
-    {
-      title: "Discover",
-      description: "Understand the problem.",
-      href: "/journey/discover",
-    },
-    {
-      title: "Plan",
-      description: "Define the approach.",
-      href: "/journey/plan",
-    },
-    {
-      title: "Build",
-      description: "Create the solution.",
-      href: "/journey/build",
-    },
-    {
-      title: "Validate",
-      description: "Test the solution.",
-      href: "/journey/validate",
-    },
-    {
-      title: "Launch",
-      description: "Release to users.",
-      href: "/journey/launch",
-    },
-    {
-      title: "Discover",
-      description: "Understand the problem.",
-      href: "/journey/discover",
-    },
-    {
-      title: "Plan",
-      description: "Define the approach.",
-      href: "/journey/plan",
-    },
-    {
-      title: "Build",
-      description: "Create the solution.",
-      href: "/journey/build",
-    },
-    {
-      title: "Validate",
-      description: "Test the solution.",
-      href: "/journey/validate",
-    },
-    {
-      title: "Launch",
-      description: "Release to users.",
-      href: "/journey/launch",
-    },
-  ]}
-/>
+<DocMetadata />
+
+# Connect Journey
+
+This journey is for [TRE operators](/explanations/personas#tre-operators), and it provides a curated steps to understand and operate a TRE instance in the Five Safes TES system.
+It covers the key components of the system, including the TRE layer, TES backend, and operating the TRE layer.
+
+<Steps>
+
+## Five Safes TES Overview
+
+- [What is Five Safes TES?](/introduction)
+- [System Architecture](/explanations/how-5s-tes-works/architecture)
+
+## TRE Layer Overview
+
+- [TRE agent](/explanations/how-5s-tes-works/tre-agent)
+- [Egress](/explanations/how-5s-tes-works/egress)
+
+## Setting up a new TRE agent
+
+- [Deploy a new TRE agent](/guides/manage-tre/deployment-steps)
+- [Connect TRE to Submission layer](/guides/manage-tre/connect-submission)
+- [Connect TRE to Egress](/guides/manage-tre/connect-egress)
+
+## TES backend
+
+- [TES Implememtations](/guides/manage-tre/tes-backend/tes-implementations)
+- [Install Funnel](/guides/manage-tre/tes-backend/install-funnel)
+
+## Operating TRE layer
+
+- [Approve/reject Projects and Memberships](/guides/manage-tre/approvals)
+- [Control TRE Data Access](/guides/manage-tre/control-tre-data-access)
+- [Approve/reject Data Egress requests](/guides/egress-approval/approve-outputs)
+
+</Steps>
