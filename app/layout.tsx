@@ -66,7 +66,7 @@ const navbar = (
   <Navbar
     logo={<div className="flex items-center gap-2">
       <Image src="/logo.svg" alt="logo" width={50} height={50} />
-      <b>Five Safes TES Documentation</b>
+      <b>Five Safes TES</b>
     </div>}
   />
 );
