@@ -10,12 +10,7 @@ import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
 
 <DocMetadata />
 
-# Submit an analysis to Five Safes TES
-
-Researchers interact with Five Safes TES (5S-TES) using the submission layer.
-The submission layer ensures [two of the Five Safes](/introduction#the-five-safes-framework): **Safe People** and **Safe Projects**.
-This means you have to become a user, and be added to an approvedproject.
-The submission layer has an HTTP API which accepts [TES messages](/explanations/concepts/tes#tes-messages-for-5s-tes). For convenience a [web application](#web-application) and [Python client library](#workbench) have been provided.
+# Use the TES Wizard to submit an analysis
 
 ## Prerequisites
 
@@ -26,66 +21,7 @@ The submission layer has an HTTP API which accepts [TES messages](/explanations/
 - Are you assigned to a project? If not, you cannot make submissions. An administrator will have to [add you to a project](/guides/manage-fed/assign-tre-user-to-project).
 - Is the project you are assigned to approved by the TRE and "online"? If not, the submission will be failed. An TRE administrator will have to make sure the [Submission layer connection](/guides/manage-tre/connect-submission) is working and [approve the project](/guides/manage-tre/approvals).
 
-## Methods
-
-Once you have access to the submission layer, you can make submissions using Workbench or the web application (aka. the TES wizard).
-{/* TODO: Will separate this into two pages with better guidance for each */}
-
-### Workbench
-
-Five Safes TES Workbench is a Python library of tools designed to make interacting with Five Safes TES simpler and easier, available on [Github](https://github.com/federated-research/5S-TES-Workbench) (full guide is on the README) and [PyPi](https://pypi.org/project/five-safes-tes-workbench/). Its main functions are to assist with creation and submission of TES messages, as well as retrieval of results.
-
-The typical workflow consists of four steps:
-
-- Validate: Provide your infrastructure configuration and credentials.
-- Build: Choose a task template and supply your analysis parameters.
-- Submit: Send the task to the TES endpoint.
-- Fetch Results: Fetch output files from MinIO storage once the task completes.
-
-There is a Jupyter [notebook](https://github.com/federated-research/5S-TES-Workbench/blob/main/src/five_safes_tes_workbench/notebooks/workbench-example.ipynb) demonstrating the workbench's main functions.
-
-<Callout type="info">
-  There are several ways to pass the configuration and authorisation information
-  to workbench. Information can be passed in directly, or it can be put into a
-  `config.yml` file. The file is the recommended method, as it means that the
-  file can be reused, rather than copying the information in every time. We also
-  recommend using keycloak credentials over the token, where possible as tokens
-  have a short lifetime. More details are in Workbench's
-  [README](https://github.com/federated-research/5S-TES-Workbench#validation).
-</Callout>
-
-#### Example configuration file
-
-```yaml copy
-config:
-  # ---- Required Configuration ----
-
-  project: "your-project-name"
-  tes_base_url: "http://your-5s-tes endpoint:5034"
-  minio_sts_endpoint: "http://your-minio-endpoint:9000/sts"
-  minio_endpoint: "your-minio-endpoint:9000"
-  minio_output_bucket: "your-output-bucket-name"
-  tres:
-    - "Your-TRE1"
-    - "Add more TREs as needed"
-
-auth:
-  # ---- Option 1: Access Token ----
-  # (Use Access Token if you have one from the Submission UI (under the API access token tab).)
-
-  access_token: "your-access-token-here"
-
-  # ---- Option 2: Keycloak Credentials ----
-  # (Use Keycloak credentials if you want the Workbench to obtain an access token on your behalf.)
-  # Get these from the Submission layer admin.
-  client_id: "submission-layer-keycloak-client-id"
-  client_secret: "submission-layer-keycloak-client-secret"
-  username: "submission-layer-username"
-  password: "submission-layer-password"
-  keycloak_url: "http://localhost:submission-layer-keycloak-port/"
-```
-
-### Web application
+## TES Wizard
 
 Below are the steps to make a submission using the web application.
 
@@ -104,7 +40,7 @@ Below are the steps to make a submission using the web application.
 - In the Submissions view, you will be shown a button to make a new submission. Click the `Create Submission` button, and then select the TES wizard to access the Wizard.
   ![A screenshot of the Submissions view, highlighting the button used for the wizards](/images/submit-tes/submissions-view.png)
 
-#### Choose a wizard
+### Choose a wizard
 
 There are three options:
 
@@ -174,7 +110,7 @@ becomes
 
 </Callout>
 
-#### Submit your task
+### Submit your task
 
 For all the wizards, there is a button at the bottom to submit your task.
 
