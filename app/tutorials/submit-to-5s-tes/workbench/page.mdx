@@ -5,7 +5,7 @@ title: Workbench
 docType: tutorial
 ---
 
-import { Steps, Callout } from "nextra/components";
+import { Steps, Callout, Tabs, FileTree } from "nextra/components";
 import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
 
 <DocMetadata />
@@ -21,19 +21,398 @@ Five Safes TES Workbench is available on [Github](https://github.com/federated-r
 
 The typical workflow consists of four steps:
 
-- Validate: Provide your infrastructure configuration and credentials.
-- Build: Choose a task template and supply your analysis parameters.
-- Submit: Send the task to the TES endpoint.
-- Fetch Results: Fetch output files from Submission layer storage once the task completes.
+- **Validate**: Provide your infrastructure configuration and credentials.
+- **Build**: Choose a task template and supply your analysis parameters.
+- **Submit**: Send the task to the TES endpoint.
+- **Fetch Results**: Fetch output files from Submission layer storage once the task completes.
 
 There is a Jupyter [notebook](https://github.com/federated-research/5S-TES-Workbench/blob/main/src/five_safes_tes_workbench/notebooks/workbench-example.ipynb) demonstrating the workbench's main functions.
 
+## Prerequisites
+
+Before using the Workbench, apart from meeting the [Prerequisites](/tutorials/submit-to-5s-tes#prerequisites) section, ensure you have the following:
+
+- **Python 3.13+** installed.
+- The **`five-safes-tes-workbench`** package installed in your environment.
+- Access to a running **TES endpoint**.
+- Access to a **MinIO** instance with an output bucket configured.
+- Valid **authentication credentials**: either a pre-obtained access token from the Submission layer UI, or Keycloak credentials provided by the Submission layer administrator.
+
+<Tabs items={["pip", "uv"]}>
+<Tabs.Tab title="pip">
+
+```sh copy
+pip install five-safes-tes-workbench
+```
+
+</Tabs.Tab>
+<Tabs.Tab title="uv">
+
+```sh copy
+uv pip install five-safes-tes-workbench
+```
+
+</Tabs.Tab>
+</Tabs>
+
+## Quickstart
+
+The fastest way to run an end-to-end submission. This assumes you already have a `config.yml` — see [Validate your configuration](#validate-your-configuration) for the format.
+
+```python copy
+from five_safes_tes_workbench.workbench import Workbench
+
+wb = Workbench()
+
+wb.validate(config_path="config.yml")
+wb.build_tes.hello_world()
+wb.submit()
+wb.fetch_outputs()
+```
+
 <Callout type="info">
-  There are several ways to pass the configuration and authorisation information
-  to workbench. Information can be passed in directly, or it can be put into a
-  `config.yml` file. The file is the recommended method, as it means that the
-  file can be reused, rather than copying the information in every time. We also
-  recommend using keycloak credentials over the token, where possible as tokens
-  have a short lifetime. More details are in Workbench's
-  [README](https://github.com/federated-research/5S-TES-Workbench#validation).
+  The Workbench instance stores your validated configuration, authentication
+  state, the most recently built TES payload and the most recent submitted task
+  ID. Because of this, `submit()` and `fetch_outputs()` depend on earlier calls
+  made in the same Python session.
 </Callout>
+
+## Submitting an analysis
+
+<Steps>
+
+### Initialise the Workbench
+
+Import the `Workbench` class and initialise a client.
+
+```python copy
+from five_safes_tes_workbench import Workbench
+
+wb = Workbench()
+```
+
+### Validate your configuration
+
+Before building or submitting any task, you must validate your configuration and credentials by calling `wb.validate()`. It takes two types of parameter.
+
+**Config parameters** establish a connection to the TES endpoint and MinIO storage, and define which TREs the task will be submitted to.
+
+| Parameter             | Description                 |
+| --------------------- | --------------------------- |
+| `project`             | Project name                |
+| `tes_base_url`        | Base URL of the TES service |
+| `minio_sts_endpoint`  | MinIO STS endpoint URL      |
+| `minio_endpoint`      | MinIO endpoint URL          |
+| `minio_output_bucket` | MinIO output bucket name    |
+| `tres`                | List of TRE names to target |
+
+**Auth parameters** authenticate you via the identity provider (Keycloak) and fetch an access token. You can either provide Keycloak credentials or an access token.
+
+| Parameter                     | Description                                      |
+| ----------------------------- | ------------------------------------------------ |
+| `client_id` / `client_secret` | Keycloak client credentials                      |
+| `username` / `password`       | Keycloak user credentials                        |
+| `keycloak_url`                | Keycloak base URL                                |
+| `access_token`                | Pre-obtained access token from the Submission UI |
+
+<Callout type="warning">
+  Authentication precedence: if `access_token` is provided it is used directly.
+  Otherwise the Workbench uses the Keycloak credentials to obtain an access
+  token. If neither is supplied, validation fails.
+</Callout>
+
+There are two ways to provide these parameters.
+
+<Tabs items={["Option A — Direct parameters", "Option B — YAML config file"]}>
+<Tabs.Tab title="Option A — Direct parameters">
+
+Pass the parameters directly as keyword arguments, using either Keycloak credentials or an access token.
+
+**Using Keycloak credentials:**
+
+```python copy
+wb.validate(
+    # --- Config parameters ---
+    project="your-project-name",
+    tes_base_url="http://your-tes-endpoint:5034",
+    minio_sts_endpoint="http://your-minio-endpoint:9000/sts",
+    minio_endpoint="http://your-minio-endpoint:9000",
+    minio_output_bucket="your-output-bucket-name",
+    tres=["Your-TRE1"],
+
+    # --- Auth parameters ---
+    client_id="your-client-id",
+    client_secret="your-client-secret",
+    username="your-username",
+    password="your-password",
+    keycloak_url="http://your-keycloak-endpoint/",
+)
+```
+
+**Using an access token:**
+
+Log in to the [Submission layer](https://5s-tes.federated-research.com/) and authenticate with your Keycloak credentials to get an API access token. Copy the token and pass it as the `access_token` parameter.
+
+```python copy
+wb.validate(
+    # --- Config parameters ---
+    project="your-project-name",
+    tes_base_url="http://your-tes-endpoint:5034",
+    minio_sts_endpoint="http://your-minio-endpoint:9000/sts",
+    minio_endpoint="http://your-minio-endpoint:9000",
+    minio_output_bucket="your-output-bucket-name",
+    tres=["Your-TRE1"],
+
+    # --- Auth parameters ---
+    access_token="your-access-token",
+)
+```
+
+</Tabs.Tab>
+<Tabs.Tab title="Option B — YAML config file">
+
+Put the config and auth parameters into a YAML file and pass its path to `validate()`. The Workbench extracts the parameters from the file and validates your credentials.
+
+```python copy
+wb.validate(config_path="path/to/your-config.yml")
+```
+
+An [example config file](https://github.com/federated-research/5S-TES-Workbench/blob/main/example-config.yml) is available in the repository.
+
+```yaml copy filename="config.yml"
+# ----- Five Safes TES Workbench — Example Configuration ------
+
+config:
+  # ---- Required Configuration ----
+  project: "your-project-name"
+  tes_base_url: "http://localhost:5034"
+  minio_sts_endpoint: "http://your-minio-endpoint:9000/sts"
+  minio_endpoint: "your-minio-endpoint:9000"
+  minio_output_bucket: "your-output-bucket-name"
+  tres:
+    - "Your-TRE1"
+    - "Add more TREs as needed"
+
+auth:
+  # ---- Option 1: Access Token ----
+  # (Use an access token if you have one from the Submission UI.)
+  access_token: "your-access-token-here"
+
+  # ---- Option 2: Keycloak Credentials ----
+  # (Use Keycloak credentials if you want the Workbench to obtain an access
+  # token on your behalf.)
+  client_id: "your-keycloak-client-id"
+  client_secret: "your-keycloak-client-secret"
+  username: "your-keycloak-username"
+  password: "your-keycloak-password"
+  keycloak_url: "http://localhost:your-keycloak-port/"
+```
+
+</Tabs.Tab>
+</Tabs>
+
+<Callout type="info">
+  The config file is the recommended method, as the file can be reused rather
+  than copying the information in every time. We also recommend using Keycloak
+  credentials over the token where possible, as tokens have a short lifetime.
+</Callout>
+
+### Build the TES task
+
+Once the Workbench has been validated, build the TES task. The Workbench provides a template-based interface via `wb.build_tes.<template>(...)` which constructs the TES message that will be submitted to the endpoint.
+
+| Template    | Method                    | Use case                                            |
+| ----------- | ------------------------- | --------------------------------------------------- |
+| Hello World | `build_tes.hello_world()` | Verify the setup is working end-to-end              |
+| Simple SQL  | `build_tes.simple_sql()`  | Run a SQL query against a TRE database              |
+| Bunny       | `build_tes.bunny()`       | Run the Health Informatics Bunny CLI analytics tool |
+| Custom      | `build_tes.custom()`      | Bring your own container image and command          |
+
+<Tabs items={["Hello World", "Simple SQL", "Bunny", "Custom"]}>
+<Tabs.Tab title="Hello World">
+
+The simplest template. Every parameter is optional, so it can be called with no arguments at all and will fall back to sensible defaults. Use it to verify connectivity before running a real analysis.
+
+```python copy
+# Minimal — no parameters needed
+wb.build_tes.hello_world()
+
+wb.submit()
+```
+
+</Tabs.Tab>
+<Tabs.Tab title="Simple SQL">
+
+Executes a SQL query against a SQL database, using the default image `harbor.federated-analytics.ac.uk/5s-tes-analysis-tools/5s-tes-analysis-tools-tre-sqlpg:1.0.0`.
+
+| Parameter | Required | Description          |
+| --------- | -------- | -------------------- |
+| `name`    | Yes      | Task name            |
+| `query`   | Yes      | SQL query to execute |
+
+```python copy
+query = (
+    'WITH user_query AS ('
+    'SELECT value_as_number FROM "NottinghamDemo".measurement '
+    'WHERE measurement_concept_id = 3000905 '
+    'AND value_as_number IS NOT NULL'
+    ') SELECT COUNT(*) AS n, SUM(value_as_number) AS total FROM user_query;'
+)
+
+wb.build_tes.simple_sql(
+    name="Simple SQL Task",
+    query=query,
+)
+
+wb.submit()
+```
+
+</Tabs.Tab>
+<Tabs.Tab title="Bunny">
+
+Runs the Health Informatics Bunny CLI analytics container. The container image is fixed by the template: `ghcr.io/health-informatics-uon/five-safes-tes-analytics-bunny-cli:1.6.0`. You provide the command list which is passed directly to the Bunny CLI. All parameters in the template can be overridden.
+
+| Parameter | Required | Description                       |
+| --------- | -------- | --------------------------------- |
+| `name`    | Yes      | Task name                         |
+| `command` | Yes      | Arguments passed to the Bunny CLI |
+
+```python copy
+wb.build_tes.bunny(
+    name="Bunny Task",
+    command=[
+        "--body-json",
+        '{"code":"GENERIC","analysis":"DISTRIBUTION","uuid":"123","collection":"test","owner":"me"}',
+        "--output",
+        "/outputs/output.json",
+        "--no-encode",
+    ],
+)
+
+wb.submit()
+```
+
+</Tabs.Tab>
+<Tabs.Tab title="Custom">
+
+A fully user-defined task. `name`, `image` and `command` are required; all other fields fall back to defaults if not provided. All parameters in the template can be overridden.
+
+```python copy
+wb.build_tes.custom(
+    name="Test Custom mode from Workbench",
+    description="custom analysis",
+    executors=[
+        {
+            "image": "ubuntu",
+            "command": ["echo", "Hello World"],
+            "workdir": "/outputs",
+            "stdout": "/outputs/stdout",
+        }
+    ],
+    outputs=[
+        {
+            "name": "Stdout",
+            "description": "Stdout results",
+            "url": "s3://",
+            "path": "/outputs",
+            "type": "DIRECTORY",
+        }
+    ],
+)
+
+wb.submit()
+```
+
+<Callout type="info">
+  For more information about constructing a custom TES message, see [TES
+  messages](/explanations/concepts/tes#tes-messages-for-5s-tes) or the official
+  [GA4GH TES schema](https://ga4gh.github.io/task-execution-schemas/).
+</Callout>
+
+</Tabs.Tab>
+</Tabs>
+
+### Submit the task
+
+Calling `wb.submit()` sends the most recently built TES payload to the TES endpoint and stores the returned task ID for the current session.
+
+```python copy
+wb.submit()
+```
+
+You can check the progress of the submission in the [Submission layer](https://5s-tes.federated-research.com/).
+
+### Collect your results
+
+Once a task has been submitted and completed, download the output files from MinIO storage with `wb.fetch_outputs()`.
+
+| Parameter    | Required | Description                                                                                                                       |
+| ------------ | -------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `tre`        | No       | TRE name to fetch results for. If omitted, the Workbench attempts to download results for **all TREs** in the config.             |
+| `task_id`    | No       | Integer task ID. Defaults to the task ID from the most recent `wb.submit()` call.                                                 |
+| `output_dir` | No       | Local directory to write the downloaded files into, created automatically. Defaults to a directory created next to your notebook. |
+
+```python copy
+# Fetch results for all TREs (uses last submitted task ID)
+wb.fetch_outputs()
+
+# Fetch results for a specific TRE
+wb.fetch_outputs(tre="Nottingham TRE 01")
+
+# Fetch with an explicit task ID (e.g. from a previous submission)
+wb.fetch_outputs(task_id=945)
+
+# Fetch for a specific TRE with an explicit task ID
+wb.fetch_outputs(task_id=945, tre="Nottingham TRE 01")
+```
+
+<Callout type="warning">
+  If no task has been submitted in this session and no `task_id` is passed, the
+  method raises a `ValueError`.
+</Callout>
+
+Downloaded files are saved in an `output/` folder created next to your notebook, organised by TRE name and child task ID:
+
+<FileTree>
+  <FileTree.Folder name="output" defaultOpen>
+    <FileTree.Folder name="<tre_name>" defaultOpen>
+      <FileTree.Folder name="<child_task_id>" defaultOpen>
+        <FileTree.File name="output.json" />
+        <FileTree.File name="acro_output_20260501_085731.zip" />
+      </FileTree.Folder>
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+
+</Steps>
+
+## What to expect when fetching results
+
+Before downloading any files, the Workbench first queries the Submission layer to check the current status of each child task — the per-TRE sub-task created when you called `wb.submit()`. Only tasks that have reached `Completed` status will have their files fetched from MinIO.
+
+| Child task state | Example statuses                                                       | Behaviour                                                        |
+| ---------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| **In progress**  | Running, Pod Processing, Waiting for Agent, Data Out Approval Begun... | Skipped: warning logged, no files downloaded for that TRE        |
+| **Terminated**   | Failed, Cancelled, Data Out Rejected                                   | Skipped: warning logged, no files downloaded for that TRE        |
+| **Completed**    | Completed                                                              | Files downloaded from MinIO into `output/<tre>/<child_task_id>/` |
+
+When fetching for all TREs, each TRE is evaluated independently: completed TREs are downloaded straight away, while in-progress or terminated TREs are skipped without affecting the others. You can re-run `wb.fetch_outputs()` at any point — previously downloaded TREs will be overwritten and any that were not yet complete will be retried.
+
+**Example output for a single, completed TRE:**
+
+```
+INFO | Child task info: 945, status: Completed
+INFO | Fetching token from keycloak...
+INFO | Keycloak token fetched successfully
+INFO | Exchanging bearer token for MinIO credentials via STS
+INFO | MinIO client initialized
+INFO | Found 2 result object(s) for task 945
+INFO | Downloading result object: 945/acro_output_20260501_085731.zip
+INFO | Downloaded -> output/Nottingham TRE 01/945/acro_output_20260501_085731.zip
+INFO | Downloading result object: 945/output.json
+INFO | Downloaded -> output/Nottingham TRE 01/945/output.json
+```
+
+## Example notebook
+
+A fully working [Jupyter notebook](https://github.com/federated-research/5S-TES-Workbench/blob/main/src/five_safes_tes_workbench/notebooks/workbench-example.ipynb) is available in the repository. It contains ready-to-run cells covering all four steps: validation, building a TES task using each template, submitting, and fetching results. It is the quickest way to get started and verify your setup end-to-end.
