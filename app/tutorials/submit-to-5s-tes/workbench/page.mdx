@@ -29,13 +29,51 @@ The typical workflow consists of four steps:
 
 ## Prerequisites
 
-Before using the Workbench, apart from meeting the [Prerequisites](/tutorials/submit-to-5s-tes#prerequisites) section, ensure you have the following:
+Before using the Workbench, apart from meeting the [Prerequisites](/tutorials/submit-to-5s-tes#prerequisites) section, ensure you:
 
-- Access to a running **TES endpoint**.
-- Access to a **MinIO** instance with an output bucket configured.
-- Valid **authentication credentials**: either a pre-obtained access token from the Submission layer UI, or Keycloak credentials provided by the Submission layer administrator.
+- A Jupyter Notebook environment with the Workbench installed. If you don't have one, you can follow the [Setup Jupyter Notebook](/tutorials/submit-to-5s-tes/setup-jupyter-notebook) tutorial to set up one.
+- Submission layer information:
+  1. Have credentials to access the Submission layer 
+  2. Know which project and TREs you want to submit to.
+  3. Have the URL of the `Submission layer API`.
+- Have decided on the way you authenticate yourself to the Submission layer API. There are two options:
+  1. Using your own credentials (recommended, because you don't need to worry about token expiration)
+  2. Using an access token (fast, and less parameters to pass, but token may expire before you retrieve the results)
+- Have decided on the way of passing the configuration values for validation. There are two options:
+  1. Using a YAML config files (you can reuse the config file for future submissions)
+  2. Using direct parameters (you and others can see the parameters you are passing)
 
-You also need **Python 3.13+** and the **`five-safes-tes-workbench`** package. If you do not already have a working Python setup, the next section walks you through building one from scratch.
+{/* Create a table 2x2 */}
+
+<Tabs items={["Using your own credentials", "Using an access token"]}>
+<Tabs.Tab title="Using your own credentials">
+
+Provide your Keycloak credentials to the Workbench.
+
+```python copy
+wb.validate(
+    client_id="your-client-id",
+    client_secret="your-client-secret",
+    username="your-username",
+    password="your-password",
+)
+```
+
+</Tabs.Tab>
+
+<Tabs.Tab title="Using an access token">
+
+Log in to the [Submission layer](https://5s-tes.federated-research.com/) and authenticate with your Keycloak credentials to get an API access token. Copy the token and pass it as the `access_token` parameter.
+
+```python copy
+wb.validate(access_token="your-access-token")
+```
+
+</Tabs.Tab>
+
+
+</Tabs>
+
 
 ## Quickstart
 
