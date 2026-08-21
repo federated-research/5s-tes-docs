@@ -1,5 +1,5 @@
 ---
-readingTime: PT30M
+readingTime: PT40M
 audiences: [researcher]
 title: Workbench
 docType: tutorial
@@ -32,32 +32,15 @@ There is a Jupyter [notebook](https://github.com/federated-research/5S-TES-Workb
 
 Before using the Workbench, apart from meeting the [Prerequisites](/tutorials/submit-to-5s-tes#prerequisites) section, ensure you have the following:
 
-- **Python 3.13+** installed.
-- The **`five-safes-tes-workbench`** package installed in your environment.
 - Access to a running **TES endpoint**.
 - Access to a **MinIO** instance with an output bucket configured.
 - Valid **authentication credentials**: either a pre-obtained access token from the Submission layer UI, or Keycloak credentials provided by the Submission layer administrator.
 
-<Tabs items={["pip", "uv"]}>
-<Tabs.Tab title="pip">
-
-```sh copy
-pip install five-safes-tes-workbench
-```
-
-</Tabs.Tab>
-<Tabs.Tab title="uv">
-
-```sh copy
-uv pip install five-safes-tes-workbench
-```
-
-</Tabs.Tab>
-</Tabs>
+You also need **Python 3.13+** and the **`five-safes-tes-workbench`** package. If you do not already have a working Python setup, the next section walks you through building one from scratch.
 
 ## Quickstart
 
-The fastest way to run an end-to-end submission. This assumes you already have a `config.yml` — see [Validate your configuration](#validate-your-configuration) for the format.
+The fastest way to run an end-to-end submission: paste this into a notebook cell and run it. It assumes you already have a `config.yml` in your project folder — see [Validate your configuration](#validate-your-configuration) for the format.
 
 ```python copy
 from five_safes_tes_workbench.workbench import Workbench
@@ -78,6 +61,8 @@ wb.fetch_outputs()
 </Callout>
 
 ## Submitting an analysis
+
+Run each of these steps in its own notebook cell, in order, checking the output before moving on. They all share the same `wb` object, so they must be run in the same notebook session.
 
 <Steps>
 
