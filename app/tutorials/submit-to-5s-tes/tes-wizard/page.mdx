@@ -5,7 +5,7 @@ title: TES Wizard
 docType: tutorial
 ---
 
-import { Steps, Callout } from "nextra/components";
+import { Steps, Callout, Tabs } from "nextra/components";
 import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
 
 <DocMetadata />
@@ -42,26 +42,37 @@ Below are the steps to make a submission using the web application.
 
 ### Choose a wizard
 
-There are three options:
+<Tabs items={["Simple SQL Query", "Custom Image", "Raw JSON"]}>
+<Tabs.Tab title="Simple SQL Query">
+  The Simple SQL Query TES Wizard mode creates a TES task that executes a [Postgres SQL Runner](https://github.com/SwanseaUniversityMedical/5S-TES-analysis-tools/tree/main/SQLRunnerPostgres) container image. To submit a SQL query TES Task you need to set:
 
-1. **Simple SQL Query**: Executes a default SQL container. Just provide a SQL Query.
-2. **Custom Image**: Provide details for another image to run, along with commands and environment variables.
-3. **Raw JSON**: Write [a TES message](/explanations/concepts/tes#tes-messages-for-5s-tes) from scratch for more complex requirements.
+- Name
+- Description _(optional)_
+- TREs to submit to
+- A SQL Query
 
-**Raw JSON**
+  <Callout type="info">
+    An example for a SQL query to get the number of records and the total value of the measurement values for the concept "Airway resistance --during inspiration" in the TRE OMOP CDM DB is:
+    ``` copy
+    WITH user_query AS (
+    SELECT value_as_number FROM public.measurement WHERE
+      measurement_concept_id = 21490742
+      AND value_as_number IS NOT NULL
+      )
+    SELECT COUNT(*) AS n, SUM(value_as_number) AS total FROM user_query;
+    ```
+  </Callout>
 
-The Raw JSON wizard has the simplest interface: a single text box for writing a TES message.
-This includes syntax highlighting and formatting.
+**Example of the Simple SQL Query TES Wizard mode:**
+<br />
+![sql query wizard](/images/submit-tes/wizard_sqlmode.png) 
 
-**Simple SQL Query**
+</Tabs.Tab>
 
-Apart from the mandatory inputs for TES Name and TREs selection, the Simple SQL Query wizard has a single additional element: a text box for writing a SQL query.
-
-**Custom image**
-
+  <Tabs.Tab title="Custom Image">
 Apart from the mandatory inputs for TES Name and TREs selection, the custom image wizard provides several more options for running tasks.
 
-1. Data input
+1. Data input (optional)
 
 If the TREs support it, you can provide a path to download extra data for input.
 
@@ -89,8 +100,6 @@ This section contains details of your [executor(s)](/explanations/concepts/tes#e
 
 Some containers will need some environment variables to be passed to them to work. You do not need to specify all of these; for example for many TREs, you will not have database credentials and these will be populated for you.
 
-![A screenshot showing the Custom image interface](/images/submit-tes/custom-image-wizard.png)
-
 <Callout type="info">
 
 The commands that you pass here need to be separated by a new line where normally they would be separated by a space on the command-line.
@@ -109,6 +118,35 @@ becomes
 ```
 
 </Callout>
+
+![A screenshot showing the Custom image interface](/images/submit-tes/custom-image-wizard.png)
+
+</Tabs.Tab>
+  <Tabs.Tab title="Raw JSON">
+  The Raw JSON wizard has the simplest interface: a single text box for writing [a TES message](/explanations/concepts/tes#tes-messages-for-5s-tes) as a JSON object.
+  This also includes JSON syntax highlighting and formatting.
+
+
+  <Callout type="info" >
+
+  Specify the Project name and TRE you want to submit to in the "tags". To submit to more than one TRE separate the TRE Names using `|`
+
+  ```json
+  "tags": {
+      "project": "Testing",
+      "tres": "DEMO 01" // or "DEMO TRE 01|DEMO TRE 02"
+  }
+  ```
+
+  </Callout>
+
+  **Example of the Raw JSON TES Wizard mode:**
+
+  ![raw json wizard](/images/submit-tes/wizard_json.png)
+
+</Tabs.Tab>
+
+</Tabs>
 
 ### Submit your task
 
