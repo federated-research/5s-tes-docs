@@ -23,14 +23,17 @@ import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
 
 ## Workbench
 
-Five Safes TES Workbench is a Python library of tools designed to make interacting with Five Safes TES simpler and easier, available on [Github](https://github.com/federated-research/5S-TES-Workbench) (full guide is on the README) and [PyPi](https://pypi.org/project/five-safes-tes-workbench/). Its main functions are to assist with creation and submission of TES messages, as well as retrieval of results.
+The Workbench is a Python-based library which provides a simple interface for submitting computational tasks to a Task Execution Service (TES) endpoint within a Five Safes federated research environment.
+It handles configuration validation, authentication, TES task construction, and result retrieval allowing researchers to focus on their analysis rather than the underlying infrastructure.
+
+Five Safes TES Workbench is available on [Github](https://github.com/federated-research/5S-TES-Workbench) and [PyPi](https://pypi.org/project/five-safes-tes-workbench/).
 
 The typical workflow consists of four steps:
 
 - Validate: Provide your infrastructure configuration and credentials.
 - Build: Choose a task template and supply your analysis parameters.
 - Submit: Send the task to the TES endpoint.
-- Fetch Results: Fetch output files from MinIO storage once the task completes.
+- Fetch Results: Fetch output files from Submission layer storage once the task completes.
 
 There is a Jupyter [notebook](https://github.com/federated-research/5S-TES-Workbench/blob/main/src/five_safes_tes_workbench/notebooks/workbench-example.ipynb) demonstrating the workbench's main functions.
 
