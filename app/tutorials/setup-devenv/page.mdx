@@ -1,0 +1,271 @@
+---
+docType: tutorial
+readingTime: PT15M
+audiences: [contributor]
+---
+import { Steps, Callout, Tabs } from "nextra/components";
+import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
+
+<DocMetadata />
+
+# Five Safes TES – Developer Guide
+
+This guide explains how to set up the Five Safes TES development environment locally.
+
+The recommended development setup is to run the **application source code directly from your IDE**, while using the **DemoStack Docker environment** to provide the supporting infrastructure.
+
+## Prerequisites
+
+- [.NET SDK](https://dotnet.microsoft.com/download)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- A .NET IDE, such as [JetBrains Rider](https://www.jetbrains.com/rider/) or [Visual Studio](https://visualstudio.microsoft.com/)
+-  Basic understanding of the architecture and flow of Five Safes TES. See [Overview](/explanations/how-5s-tes-works/architecture) for more details.
+
+## Repositories
+
+The development environment uses two repositories:
+
+* [**5S-TES**](https://github.com/SwanseaUniversityMedical/5s-Tes) – application source code.
+* [**5S-TES-Deployment**](https://github.com/SwanseaUniversityMedical/5S-TES-deployment) – deployment configuration files and Docker environments.
+
+The `DemoStack` environment is located in the [**DemoStack**](https://github.com/SwanseaUniversityMedical/5S-TES-deployment/tree/main/DemoStack) directory of the deployment repository. Clone both repositories with:
+
+<Tabs items={["HTTPS Clone", "SSH Clone", "GitHub CLI"]}>
+  <Tabs.Tab title="HTTPS Clone">
+    Clone using the web URL. 
+     ```bash copy
+    git clone https://github.com/SwanseaUniversityMedical/5s-Tes.git
+    ```
+
+    ```bash copy
+    git clone https://github.com/SwanseaUniversityMedical/5S-TES-deployment.git
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab title="SSH Clone">
+    Clone using a password-protected SSH key.
+    
+    ```bash copy
+    git clone git@github.com:SwanseaUniversityMedical/5s-Tes.git
+    ```
+
+    ```bash copy
+    git clone git@github.com:SwanseaUniversityMedical/5S-TES-Deployment.git
+    ```
+    
+  </Tabs.Tab>
+  <Tabs.Tab title="GitHub CLI">
+    Clone using the GitHub CLI.
+
+    ```bash copy
+    gh repo clone SwanseaUniversityMedical/5s-Tes
+    ```
+
+    ```bash copy
+    gh repo clone SwanseaUniversityMedical/5S-TES-Deployment
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+## DemoStack
+
+Open the `5S-TES-Deployment` repository and navigate to:
+
+```bash copy
+cd DemoStack/
+```
+
+The `DemoStack` Docker Compose environment provides the infrastructure required to run Five Safes TES locally. It includes both the **application services** and the **shared services** that those applications depend on.
+
+The stack is organised into:
+
+* **Application Services** – Submission Layer, TRE Layer and Egress Layer.
+* **Shared Services** – PostgreSQL, RabbitMQ, Keycloak, Vault, OpenLDAP, Elasticsearch, Camunda and Zeebe.
+* **OMOP Lite** – optional service for working with synthetic data.
+* **Storage Services** – RustFS S3 storage used by Submission and TRE.
+
+### Choose What to Run Locally
+
+The recommended development workflow is to run the application you are developing from your IDE, while leaving its dependencies running in Docker.
+
+For example, if you are developing the Submission Layer:
+
+| Application           | Where it runs |
+| --------------------- | ------------- |
+| `Submission.Api`      | IDE           |
+| `Submission.Web`      | IDE           |
+| `Agent.Api`           | Docker        |
+| `Agent.Web`           | Docker        |
+| `Credentials.Camunda` | Docker        |
+
+You do not need to run every application from your IDE. Only configure the applications you are actively developing.
+
+Before starting DemoStack, prevent the application you are developing from also starting in Docker.
+
+<Tabs items={["Edit the compose file", "Use Docker Desktop"]}>
+
+<Tabs.Tab title="Edit the compose file">
+
+
+To prevent an application service from starting with DemoStack, comment out the corresponding application service in the `DemoStack` compose file.
+
+For example, when developing the **Submission Layer**, comment out:
+
+```yaml copy
+# - ../ServiceStack/compose-manifests/applications/submission-layer.yml
+```
+
+Then start DemoStack:
+
+```bash copy
+docker compose up -d
+```
+
+The Submission Layer will now run from your IDE while the shared services remain in Docker.
+
+The same approach can be used when developing the **TRE Layer** or **Egress Layer**.
+
+### Check the Running Services
+
+After starting DemoStack, check which services are running:
+
+```bash copy
+docker compose ps
+```
+
+<Callout type="info">
+Only comment out the application service you are developing. Keep the shared services running because your locally running application still depends on them.
+</Callout>
+
+</Tabs.Tab>
+
+<Tabs.Tab title="Use Docker Desktop">
+
+
+If you prefer not to modify the Compose file, you can stop the application containers directly from **Docker Desktop**.
+
+First, start the DemoStack:
+
+```bash copy
+docker compose up -d
+```
+
+Then:
+
+1. Open **Docker Desktop**.
+2. Find the application containers you are developing.
+3. Stop those containers.
+4. Leave the shared services running.
+5. Start the applications from your IDE.
+
+For example, when developing the **Submission Layer**, stop the Submission API and UI containers, then run `Submission.Api` and `Submission.Web` from your IDE.
+
+
+<Callout type="info">
+Stopping containers this way does not modify the Compose file. The containers will start again the next time you run `docker compose up -d`.
+</Callout>
+
+</Tabs.Tab>
+
+</Tabs>
+
+### Components and Ports
+
+The [Submission Layer](https://docs.federated-analytics.ac.uk/explanations/how-5s-tes-works/submission-layer) and [TRE Agent](https://docs.federated-analytics.ac.uk/explanations/how-5s-tes-works/tre-agent) documentation provides an overview of the architecture, components and user-accessible ports.
+
+**DemoStack uses the same user-accessible ports listed in those documents.** When running an application locally from your IDE, use the corresponding local development port.
+
+### Optional Services
+
+OMOP Lite is optional and only needs to be enabled when required.
+
+For example, enable it when developing the TRE API and testing a task against synthetic data:
+
+```yaml
+# OMOP Lite Service - Optional
+- ../ServiceStack/compose-manifests/shared/omop-lite.yml
+```
+
+### Storage Services
+
+DemoStack provides the RustFS S3 storage used by the Submission and TRE applications:
+
+```yaml
+- ../ServiceStack/compose-manifests/storage/s3-tre.yml
+- ../ServiceStack/compose-manifests/storage/s3-submission.yml
+```
+
+These services should normally remain enabled when developing the applications locally.
+
+## Run the TES API
+
+For local TES development, **Funnel** can be run as the backend TES API.
+
+From the `DemoStack` directory, run:
+
+```bash copy
+./scripts/funnel.sh
+```
+
+The script:
+
+1. Detects the operating system.
+2. Determines the S3 client URL.
+3. Installs the `mc` client.
+4. Logs in to TRE S3 storage.
+5. Creates access keys.
+6. Installs and configures Funnel.
+7. Runs Funnel.
+
+<Callout type="info">
+The S3 storage service must be healthy and running before starting Funnel.
+</Callout>
+
+## Run Applications from the IDE
+
+Open the [**5S-TES repository**](https://github.com/SwanseaUniversityMedical/5s-Tes) in your IDE.
+
+The main application areas are:
+
+* **Submission** – researcher-facing API and UI.
+* **Agent** – TRE Agent API and UI.
+* **Credentials** – credential management, including `Credentials.Camunda`.
+* **Shared** – shared libraries and models.
+
+<Callout type="info">
+*Only configure the applications you chose to run locally. Any application that remains enabled in DemoStack will continue to run in Docker.*
+</Callout>
+### Configure the Local Development Environment
+
+For each application you are running from the IDE:
+
+1. Open the application's `Properties/launchSettings.json`.
+2. Under `profiles` → `http` → `environmentVariables`, set:
+
+```json
+"ASPNETCORE_ENVIRONMENT": "Development_Notts"
+```
+
+3. Under the same `http` profile, check `applicationUrl`.
+4. Set it to the local development port specified in the file's comments.
+
+For example:
+
+```json
+"profiles": {
+  "http": {
+    "commandName": "Project",
+    "launchBrowser": true,
+    "launchUrl": "swagger",
+    "environmentVariables": {
+      "ASPNETCORE_ENVIRONMENT": "Development_Notts"
+    },
+    "dotnetRunMessages": true,
+    "applicationUrl": "http://localhost:5034"
+  }
+}
+```
+
+<Callout type="info">
+The port above is only an example. Use the port specified for the application you are configuring.
+</Callout>
+You can now start the application from your IDE and debug it while the remaining Five Safes TES environment continues to run in Docker.

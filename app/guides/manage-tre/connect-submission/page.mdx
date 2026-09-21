@@ -135,17 +135,33 @@ To change the synchronisation interval, a TRE Operator can update the `syncSched
 ## Health Checks
 
 The TRE Agent performs health checks at a regular interval to verify that its connection to the Submission Layer and supporting services remains healthy.
-To change the health check interval, a TRE Operator can update the `healthCheckSchedule` setting in the TRE Agent configuration.
+To change the health check interval, a TRE Operator can update the `healthCheckSchedule` setting in the TRE Agent configuration. The health check logs are kept by default for 30 days, a TRE Operator can adjust the duration by updating the `daysBeforeHealthLogDeletion` setting in the TRE Agent configuration.
 
 **During each health check, the TRE Agent verifies that:**
 
-- The Submission Layer endpoint is reachable.
-- The Egress endpoint is valid and reachable.
-- The configured TES endpoint is valid and reachable.
+- The **Submission Layer** endpoint is valid and reachable.
+- The **Data Egress** endpoint is valid and reachable.
+- The **TES endpoint** is valid and reachable.
+- The **RabbitMQ** broker is valid and reachable.
 
 If any of these checks fail, the TRE Agent automatically stops the **Sync** and **Scan** jobs to prevent synchronisation attempts with an invalid configuration.
 
-The current health status is displayed in the **Deployment Admin** page under the **Health Check Status** tab, where each check indicates whether it is healthy and, if not, provides the reason for the failure.
+### Troubleshooting
+The current health status is displayed in the **Deployment Admin** page under the **Health Check Status** tab, where each check indicates whether it is healthy and, if not, provides the reason for the failure. 
+
+#### Common failure messages include:
+
+| Health check message | Action |
+|---|---|
+| **URL for Submission API is missing.** | Configure the Submission API URL in the TRE Agent configuration. |
+| **Invalid URL for Submission API.** | Check that the configured URL is correct and reachable. |
+| **Failed to reach Submission API.** | Check that the Submission Layer is running and accessible by the TRE Agent. |
+| **TES API URL is missing.** | Configure the TES API URL in the TRE Agent configuration. |
+| **Failed to reach TES API.** | Check that the TES endpoint is running and accessible by the TRE Agent. |
+| **Not connected to RabbitMQ broker.** | Check that RabbitMQ is running and that the configured host, port, and virtual host are correct. |
+| **Failed to reach RabbitMQ broker.** | Check the error details displayed after the message. This may indicate incorrect RabbitMQ credentials, an incorrect virtual host, or that the broker cannot be reached. |
+| **Missing Egress Credentials.** | Configure the Egress username and password in the TRE Agent configuration. |
+| **Invalid Egress Credentials.** | Check that the configured Egress credentials are correct and that the Egress Keycloak service is available. |
 
 Once any configuration or connectivity issues have been resolved, the Synchronisation can be restarted from the **Deployment Admin** page by selecting **Enable Sync**.
 
