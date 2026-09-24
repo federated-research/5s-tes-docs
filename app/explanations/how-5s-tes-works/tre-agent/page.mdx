@@ -26,6 +26,7 @@ The code for TRE Agent is open source, and can be found on [Github](https://gith
 ## Core Functionality
 
 - Polls the Submission Layer to retrieve new tasks
+- Ensures every TES task includes a `/tmp` volume mount (merged with any volumes specified in the request) before submission
 - Submits tasks to a GA4GH TES implementation
 - Monitors task execution and collects results
 - Sends task outputs to the Egress service for approval

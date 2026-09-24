@@ -52,3 +52,9 @@ Below is a comparison between TES-K and Funnel. The purpose of this comparison i
 | **Ingress / TLS**                  | Operator-managed                                                                                                                                                                                   | Managed by director-wfs; SSL can be disabled for private networks                                                                                 |
 | **Storage backend (tested)**       | Operator-defined                                                                                                                                                                                   | MinIO (S3-compatible), configured at install time                                                                                                 |
 | **Operator burden**                | High — all hardening must be configured deliberately per deployment                                                                                                                                | Low — secure defaults enforced; operator configures exceptions, not rules                                                                         |
+
+## Writing containers for both backends
+
+The comparison above highlights differences that affect **container authors**, not just TRE operators. In particular, the `command` field in a TES task payload must include the program name as `command[0]` to work on TESK, even if Funnel tolerates payloads that rely on the image `ENTRYPOINT`.
+
+See [Writing TES-compliant containers](/explanations/concepts/writing-tes-containers) for practical guidance, including side-by-side Funnel and TESK examples and notes on .NET and `/tmp` behaviour under hardened TESK deployments.

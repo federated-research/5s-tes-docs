@@ -1,0 +1,125 @@
+---
+title: Writing TES-compliant containers
+readingTime: PT10M
+audiences: [contributor, integrator]
+docType: explanation
+---
+
+import { Callout } from "nextra/components";
+import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
+
+<DocMetadata />
+
+# Writing TES-compliant containers
+
+When you build or adapt a container to run as a TES executor in 5S-TES, the task payload's `command` field must follow the [GA4GH TES specification](https://ga4gh.github.io/task-execution-schemas/docs/#tag/TaskService/operation/CreateTask): it is an argv array where `command[0]` is the program to execute.
+
+Not all TES backends behave the same way. [Funnel](/guides/manage-tre/tes-backend/install-funnel) (the default backend in many 5S-TES deployments) effectively passes `command` as arguments to the container image's Docker `ENTRYPOINT`. [TESK](/guides/manage-tre/tes-backend/tes-implementations) execs `command[0]` directly and ignores the image `ENTRYPOINT`.
+
+This means a container that works on Funnel may fail on TESK unless the task payload is written to the TES spec. For background on this evaluation, see [Discussion #7](https://github.com/orgs/federated-research/discussions/7) in the federated-research organisation.
+
+## Core guidance
+
+**Write your containers as if `ENTRYPOINT` does not exist, and always include the program name in `command[0]`.**
+
+The TES schema defines `command` as:
+
+> A sequence of program arguments to execute, where the first argument is the program to execute (i.e. argv).
+
+Example from the spec:
+
+```json
+"command": ["/bin/md5", "/data/file1"]
+```
+
+Following this rule keeps containers portable across TES backends and avoids surprises when a TRE migrates from Funnel to TESK.
+
+## Funnel vs TESK: SQL Runner example
+
+The [Postgres SQL Runner](https://github.com/SwanseaUniversityMedical/5S-TES-analysis-tools/tree/main/SQLRunnerPostgres) container image declares an `ENTRYPOINT` that runs the .NET application. The following payloads both target the same image, but only the second is TES-spec compliant and works on TESK.
+
+### Works on Funnel only
+
+Funnel passes the command as arguments to the image `ENTRYPOINT`:
+
+```json
+"executors": [
+  {
+    "image": "harbor.federated-analytics.ac.uk/5s-tes-analysis-tools/5s-tes-analysis-tools-tre-sqlpg:1.0.0",
+    "command": [
+      "--Output=/outputs/output.csv",
+      "--Query=SELECT 1"
+    ]
+  }
+]
+```
+
+### Works on Funnel and TESK
+
+Include the full argv — program name first, then arguments:
+
+```json
+"executors": [
+  {
+    "image": "harbor.federated-analytics.ac.uk/5s-tes-analysis-tools/5s-tes-analysis-tools-tre-sqlpg:1.0.0",
+    "command": [
+      "dotnet",
+      "SQLRunnerPostgres.dll",
+      "--Output=/outputs/output.csv",
+      "--Query=SELECT 1"
+    ]
+  }
+]
+```
+
+<Callout type="info">
+  If you are unsure what `command[0]` should be, inspect the container image's `ENTRYPOINT` and `CMD` in its Dockerfile, or run the container locally with `docker inspect <image>`.
+</Callout>
+
+## Hardened TESK deployments: additional gotchas
+
+TESK deployments that use admission controllers (for example [director-wfs](https://github.com/SwanseaUniversityMedical/director-wfs) with Gatekeeper) enforce stricter pod security than a default Funnel Docker backend. Container authors should be aware of the following.
+
+### Read-only root filesystem and `/tmp`
+
+Hardened TESK stacks typically enforce `readOnlyRootFilesystem: true`, which makes the entire container filesystem read-only — including `/tmp`. Funnel's Docker backend, by contrast, does not enforce a read-only root filesystem, so `/tmp` inside the container is writable without any extra configuration.
+
+The 5S-TES TRE Agent always includes `/tmp` in the task `volumes` list before submission, merging it with any volumes you specify. You do not need to add `/tmp` yourself, but you may include additional volumes for shared data paths. The Agent applies this as it dispatches the task to the TRE's TES backend, so the `/tmp` entry will not appear in the task as returned by the Submission layer's TES endpoints — your submitted request is stored unchanged.
+
+Tools and runtimes that write to `/tmp` at startup may still fail if `/tmp` is not writable on a given backend — the Agent default covers the common TESK case. Most tools also respect the `TMPDIR` environment variable.
+
+### .NET containers and misleading OOM errors
+
+When `readOnlyRootFilesystem` is enforced, the .NET runtime may fail at startup trying to create a diagnostic socket at `/tmp/dotnet-diagnostic-<pid>`. The error can look like an out-of-memory kill (exit code 137, HRESULT `0x8007000E`), but the actual cause is a filesystem write failure.
+
+**Fix:** disable .NET diagnostics by setting `DOTNET_EnableDiagnostics=0` in the task environment:
+
+```json
+"env": {
+  "DOTNET_EnableDiagnostics": "0"
+}
+```
+
+Alternatively, bake this into the container image in the Dockerfile:
+
+```dockerfile
+ENV DOTNET_EnableDiagnostics=0
+```
+
+Baking it into the image is recommended for containers intended for TRE deployment, where diagnostic tooling is unlikely to be needed.
+
+## Checklist for container authors
+
+| Check | Why |
+| ----- | --- |
+| `command[0]` is the program to execute | Required by the TES spec; required for TESK |
+| Arguments follow as `command[1]`, `command[2]`, … | Matches argv semantics across backends |
+| Do not rely on Docker `ENTRYPOINT` | Funnel honours it; TESK ignores it |
+| .NET images set `DOTNET_EnableDiagnostics=0` | Avoids startup failures on read-only filesystems |
+| Avoid hard dependency on writable `/tmp` | May not be available under hardened TESK deployments |
+
+## Further reading
+
+- [TES concepts](/explanations/concepts/tes) — TES message fields used by 5S-TES
+- [TES implementations](/guides/manage-tre/tes-backend/tes-implementations) — operator comparison of Funnel and TESK
+- [Evaluating TESK as an alternative to Funnel](https://github.com/orgs/federated-research/discussions/7) — full evaluation including Azure VM deployment and testing notes
