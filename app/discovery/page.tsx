@@ -8,7 +8,7 @@ import { permanentRedirect } from 'next/navigation';
 
 export default async function WelcomeReportRedirect() {
   // Triggers an immediate server-side HTTP 308 redirect
-  permanentRedirect('https://docs.federated-research.com/discovery'); 
+  permanentRedirect('https://docs.federated-research.com/weaves/discovery'); 
   
   return null; 
 }
