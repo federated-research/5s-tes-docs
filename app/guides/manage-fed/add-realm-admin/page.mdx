@@ -57,19 +57,19 @@ This guide describes how to create a dedicated administrative user that can mana
 
 1. Open the **Role mapping** tab.
 2. Select **Assign role**.
-3. Change **Filter by clients** to **realm-management**.
+3. Choose **Client roles**.
 4. Assign the following client roles:
 
 | Role             | Purpose                                                             |
 | ---------------- | ------------------------------------------------------------------- |
 | `create-client`  | Allows the creation of new clients within the realm.                |
 | `manage-clients` | Create and manage clients.                                          |
-| `manage-users`   | Modify user role mappings when assigning roles to service accounts. |
 | `view-clients`   | View client configuration.                                          |
 | `query-clients`  | Query clients through the Admin API.                                |
-| `map-roles`      | Assign roles to service accounts.                                   |
+| `manage-users`   | Modify user role mappings when assigning roles to service accounts. |
 | `view-users`     | View service account users.                                         |
 | `query-users`    | Query service account users.                                        |
+| `view-realm`     | View the configuration, settings, and metadata of the realm.        |
 
 <Callout type="info">
 After creating the user and setting the password, configure the
