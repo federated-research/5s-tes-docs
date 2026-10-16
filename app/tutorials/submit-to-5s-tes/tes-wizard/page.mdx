@@ -97,7 +97,7 @@ This section contains details of your [executor(s)](/explanations/concepts/tes#e
 
 4. Environment variables
 
-Some containers will need some environment variables to be passed to them to work. You do not need to specify all of these; for example for many TREs, you will not have database credentials and these will be populated for you.
+Some containers will need some environment variables to be passed to them to work. You do not need to specify all of these; for example for many TREs, you will not have database credentials and these will be populated for you. S3 credentials are populated the same way: the job receives `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `SUBMISSION_BUCKET`, and `OUTPUT_BUCKET` for the project's buckets on the TRE store. See [Object storage](/explanations/how-5s-tes-works/object-storage).
 
 <Callout type="info">
 
