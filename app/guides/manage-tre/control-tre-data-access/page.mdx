@@ -26,9 +26,9 @@ This page helps to set the values which are used by the TES backend (e.g., Funne
 
 ![DMN Rules screenshot](/images/tre-layer/DMNRules.png)
 
-Find the rules with the following tags and change them to match the values of the TRE DB credentials.
+Each Postgres connection used by a project is identified by its own `tag` value in the DMN table. Find the `postgresDatabase`, `postgresServer` and `postgresPort` rows for each connection tag the project uses and set them to match the TRE's database credentials.
 
-| Output:tag       | Output:value                       |
+| Output:env       | Output:value                       |
 | ---------------- | ---------------------------------- |
 | postgresDatabase | change to the TRE DB database name |
 | postgresServer   | change to the TRE DB host          |
@@ -40,7 +40,34 @@ Find the rules with the following tags and change them to match the values of th
   - More details about TRE DB can be found [here](/explanations/how-5s-tes-works/tre-agent#tre-database).
 </Callout>
 
-### Notices
+### Configuring schema access
 
+Each Postgres connection can be granted access to one or more schemas, and the permissions for each schema are configured independently. For every schema, add two rows sharing the same connection tag:
+  - One must have an `env` name containing the word `schema` plus an identifier, e.g. `schemaAnalytics`. Its value should be set to the name of the schema.
+  - The other must be a matching row with an `env` name containing the word `permissions`. This must be given the same identifier as the schema (e.g. `permissionsAnalytics`) and should have comma-separated permissions as its value, e.g. `Read,Write,CreateTables`. 
+Every `env` name must include an identifier, otherwise we cannot match schemas to their levels of permission. If no permissions row is found or the permissions value is left empty, the schema defaults to readonly access.
+
+| Permission       | Description                                           |
+| ---------------- | ----------------------------------------------------- |
+| Read             | Select on all tables in the schema                    |
+| Write            | Insert, Update, Delete on all tables in the schema    |
+| CreateTables     | Create new tables or objects in the schema            |
+
+<Callout type="warning">
+  Adding or deploying these rules only ensures the schema itself exists — it never creates tables inside it. Either grant `CreateTables` so a submission can create its own tables, or have an admin create the expected tables in advance.
+</Callout>
+
+#### Example
+
+A project with a read-only source connection and a separate writable scratch connection might look like this:
+
+| Output:tag         | Output:env           | Output:value                   | 
+| ------------------ | -------------------- | ------------------------------ |
+| `postgres-source`  | `schemaSource`       | `string(project)`              |
+| `postgres-source`  | `permissionsSource`  | `"Read"`                       |
+| `postgres-scratch` | `schemaScratch`      | `string(project) + "-scratch"` |
+| `postgres-scratch` | `permissionsScratch` | `"Read,Write,CreateTables"`    |
+
+### Notices
 - Any string value put into an output value should be inside double quotes. For example: `"public"`. If the output values refer to input variables, double quotes are not required, for example, `string(project)`. See [Camunda DMN rule convention](https://docs.camunda.io/docs/components/modeler/feel/language-guide/feel-expressions-introduction/) for more details.
-- The value of `postgresSchema` defaults to the project name in the Submission Layer. If the [OMOP CDM](/explanations/concepts/omop) is under a different schema, change the value to the actual lowercase schema name in double quotes.
+- If a schema holds the [OMOP CDM](/explanations/concepts/omop), its value must hold the actual lowercase schema name in double quotes.
