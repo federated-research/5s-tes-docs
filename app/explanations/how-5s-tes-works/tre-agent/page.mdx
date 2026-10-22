@@ -30,6 +30,7 @@ The code for TRE Agent is open source, and can be found on [Github](https://gith
 - Submits tasks to a GA4GH TES implementation
 - Monitors task execution and collects results
 - Sends task outputs to the Egress service for approval
+- Copies project files between the Submission Layer store and the TRE store, and injects a short-lived S3 key for each job. See [Object storage](/explanations/how-5s-tes-works/object-storage)
 - Maintains communication flow between the Submission Layer, TES, and Egress
 - Provides a API that can be used to integrate and build against.
 

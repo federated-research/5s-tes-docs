@@ -35,8 +35,12 @@ Find the rules with the following tags and change them to match the values of th
 | postgresPort     | change to the TRE DB port          |
 
 <Callout type="info">
-  - 5S-TES has been tested and confirmed working with Postgres. Trino and S3 are
+  - 5S-TES has been tested and confirmed working with Postgres. Trino is
   supported in principle but not yet fully verified.
+  - S3 rows are in the same `credentials.dmn` table, tagged `s3`. Editing the
+  `postgres` rows above does not change them. The S3 rows copy `submissionBucket`,
+  `outputBucket`, and `endPoint` from the values the TRE Agent passes in. See
+  [Object storage](/explanations/how-5s-tes-works/object-storage).
   - More details about TRE DB can be found [here](/explanations/how-5s-tes-works/tre-agent#tre-database).
 </Callout>
 

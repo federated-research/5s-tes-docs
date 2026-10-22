@@ -1,0 +1,109 @@
+---
+readingTime: PT6M
+audiences: [tre-operator, contributor]
+docType: explanation
+title: Object storage
+---
+
+import { Callout } from "nextra/components";
+import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
+
+<DocMetadata />
+
+## Overview
+
+Five Safes TES stores project files in S3-compatible storage (RustFS or MinIO). There are two stores:
+
+| Store | Runs in | Used by |
+| ----- | ------- | ------- |
+| **Submission store** | Submission Layer | The Submission Layer, and the TRE Agent when it copies files in or out |
+| **TRE store** | TRE Layer | The TRE Agent, and the job container |
+
+A job never touches the Submission store. The TRE Agent copies a job's input files onto the TRE store before the job runs, and copies results back afterwards. The job gets a short-lived key that only works on the TRE store.
+
+## Buckets
+
+**When a project is created**, the Submission Layer makes two buckets on the Submission store:
+
+- a **submission** bucket for input files
+- an **output** bucket for results
+
+It also creates a long-lived key for the project, `proj-{projectId}-s3`, that can only reach those two buckets. The TRE Agent uses this key whenever it reads or writes the Submission store. It is never given to a job.
+
+**When the TRE Agent first syncs the project**, it makes two matching buckets on the TRE store. Each is named after the Submission bucket, lowercased, with `tre` on the end. They start empty.
+
+Jobs do not get their own buckets. Every job in a project shares the project's two TRE buckets. Each job's results go in a folder named after its submission ID.
+
+## How a job gets its key
+
+When the TRE Agent picks up a submission, it:
+
+1. Asks the Credentials service to create a key named `sub-{submissionId}-u{userId}` on the TRE store. The secret is saved in Vault at `s3/{user}/{submissionId}/{project}`.
+2. Reads the key back from Vault and schedules it to be deleted after 24 hours.
+3. Copies the input files from the Submission store's submission bucket into the TRE submission bucket. Files already there are skipped.
+4. Points the job's outputs at `s3://{TRE output bucket}/{submissionId}`.
+5. Adds the key to each executor's environment variables.
+
+Steps 3 to 5 only happen when the TRE Agent sends jobs to TESK (`AgentSettings:UseTESK` is `true`).
+
+### When the key is deleted
+
+The key is deleted at whichever of these comes first:
+
+- the job finishes with state `COMPLETE`, `EXECUTOR_ERROR` or `SYSTEM_ERROR`
+- 24 hours have passed since step 2 (the clock starts before the job is sent, not when it finishes)
+
+If any credential fails to be created, the TRE Agent deletes the credentials that were made straight away and cancels the submission. If Vault returns no credentials, the submission is cancelled too.
+
+### What the key can do
+
+The key is made for one submission, but it covers the whole project's TRE buckets:
+
+- **TRE submission bucket**: list and read
+- **TRE output bucket**: list, read, write and delete
+
+It is not limited to the job's own folder. While the key is valid, a job can read or overwrite the results of other jobs in the same project.
+
+<Callout>
+  There is nothing to configure per project. The S3 rows in `credentials.dmn`
+  (tagged `s3`) match every submission, and the TRE Agent supplies the bucket
+  names and endpoint itself.
+</Callout>
+
+## Environment variables
+
+The job container should read its key and bucket names from these variables. Do not put a key or bucket name in the TES message.
+
+| Purpose | Variables |
+| ------- | --------- |
+| Standard S3 clients (AWS SDKs) | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_ENDPOINT_URL`, `AWS_S3_ENDPOINT`, `AWS_REGION`, `AWS_DEFAULT_REGION` |
+| MinIO clients | `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, `MINIO_ENDPOINT` |
+| Bucket names | `SUBMISSION_BUCKET`, `OUTPUT_BUCKET` |
+
+The same values are also set as `accessKey`, `secretKey`, `endPoint`, `submissionBucket` and `outputBucket`.
+
+- The endpoint is the TRE Agent's `MinioTRESettings:Url`.
+- The region is `MinioTRESettings:AWSRegion`, or `us-east-1` if that is empty.
+
+Database credentials (Postgres and Trino) are created the same way but configured separately. See [Control TRE Data Access](/guides/manage-tre/control-tre-data-access).
+
+## Turning it on
+
+Set all three of these to `true` on the TRE Agent:
+
+- `Features:EphemeralCredentials`
+- `Features:SqlAndNotGraphQl`
+- `AgentSettings:UseTESK`
+
+The Credentials service creates and deletes the keys through `MinioSettings`. Its `MinioSettings:Url` must point at the **TRE** store, the same store as the TRE Agent's `MinioTRESettings:Url`. Otherwise the key is created on a store the job cannot reach.
+
+## Bucket cleanup
+
+The TRE Agent deletes a project's buckets on both stores once the project has been expired for a while.
+
+| Setting | Meaning |
+| ------- | ------- |
+| `JobSettings:bucketCleanupSchedule` | Hour of the day (UTC, 1 to 23) the job runs. `0` or less turns the job off. |
+| `JobSettings:DaysAfterExpiryBeforeBucketDeletion` | Days after the project's end date before its buckets are deleted. Default `90`. |
+
+The job deletes the two TRE buckets, then asks the Submission Layer to delete its two. The Submission Layer refuses if the project's end date has not passed. The project is only marked as cleaned when both sides succeed. Otherwise the next run tries again.

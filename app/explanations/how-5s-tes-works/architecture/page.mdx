@@ -92,7 +92,7 @@ The high level overview of working of the Five Safes TES is as follows:
 <div>
     1. The TRE Agent in the TRE Layer monitors the queue for new jobs (tasks). Once identified, TRE agent get the task and start the pre-processing of the task.
 
-    2. A tool called Camunda will dynamically inject the ephemeral credentials into the environment variables of the TES message, which Executor will use to connect to the database.
+    2. A tool called Camunda will dynamically inject the ephemeral credentials into the environment variables of the TES message, which Executor will use to connect to the database. The same step injects a short-lived S3 key for the project's buckets on the TRE store. See [Object storage](/explanations/how-5s-tes-works/object-storage).
 
     3. The standardised payload is sent to the Executor, then the analysis will be executed against TRE's restricted database.
 
