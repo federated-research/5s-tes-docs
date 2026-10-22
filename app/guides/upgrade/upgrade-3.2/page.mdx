@@ -1,0 +1,167 @@
+---
+docType: guide
+readingTime: PT15M
+audiences: [tre-operator]
+---
+
+import { Steps, Callout } from "nextra/components";
+import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
+
+<DocMetadata />
+
+# Upgrade your TRE to v3.3.4
+
+Follow this guide to upgrade your existing TRE deployment to v3.3.4.
+
+This guide covers the deployment configuration changes, required volume resets, Vault configuration and the steps needed to reconnect your TRE to the Data Egress and Submission Layer.
+
+## Prerequisites
+
+Before starting the upgrade:
+
+- Ensure you have access to the TRE deployment repository and its configuration files.
+- Review the [TRE deployment guide](https://docs.federated-analytics.ac.uk/guides/manage-tre/deployment-steps).
+- Obtain any updated Submission Layer configuration values from the Federated Analytics team.
+
+<Callout type="warning">
+This upgrade involves removing Docker volumes and recreating Vault. Removing a volume permanently deletes its contents. Back up any data that needs to be retained and verify the volume names before running the commands.
+</Callout>
+
+<Steps>
+
+## Update the TRE deployment configuration
+
+Follow the [TRE deployment steps](https://docs.federated-analytics.ac.uk/guides/manage-tre/deployment-steps) to configure your TRE for v3.3.4.
+
+Update your `.env` file using [`DeploymentStack/TRE/.env.example`](https://github.com/SwanseaUniversityMedical/5S-TES-Deployment/blob/a8519e7cf73186893e53e9d5133b39d008843fbd/DeploymentStack/TRE/.env.example) from the target version as a reference.
+
+Most configuration values will be familiar from your current deployment, but some names and values may have changed. Review the  file and update the values accordingly.
+
+#### Key differences in v3.3.4 configuration values
+
+| Area | Older Versions | v3.3.4 |
+| --- | --- | --- |
+| Vault | Not present | Vault root token and startup command |
+| LDAP | Not present | LDAP admin and configuration passwords |
+| Hangfire | Disabled | External Hangfire enabled with credentials |
+| RabbitMQ | Not configurable | RabbitMQ password |
+| S3 | MinIO-specific configuration | TRE S3 configuration |
+| TRE S3 credentials | Not present | `TRES3RootUser` / `TRES3RootPass` |
+| S3 OpenID secret | `MinioTreOpenidSecret` | `TRES3OpenidSecret` |
+| S3 console | `MINIO_TRE_UI_URL` | `TRES3ConsoleUrl` |
+| Submission S3 | MinIO API and console settings | `SubmissionS3ApiUrl` |
+| Keycloak | Basic hostname and URL configuration | Bootstrap credentials, startup command and full URL |
+| Submission connection | Directly configured API, Keycloak and MinIO URLs | Dedicated Submission Connection Settings section |
+| Health checks | Not present | Configurable health-check schedule and log retention |
+| Health-check schedule | Not present | `healthCheckSchedule=10` |
+| Health-log retention | Not present | `daysBeforeHealthLogDeletion=30` |
+| Demo data | `DemoMode=false` | `SeedDemoData=false` and `DemoModePassword` |
+| Better Auth | Present | Present |
+| Application name | Not present | `AppName=Five Safes TES` |
+| Sync schedule | 10 minutes | 10 minutes |
+| Scan schedule | 1 minute | 1 minute |
+| Proxy settings | Present | Still present |
+| HTTPS settings | Present | Still present |
+| `bucketCleanupSchedule` | Not present | `2` | Added daily S3 bucket cleanup at 02:00 UTC |
+| `daysAfterExpiryBeforeBucketDeletion` | Not present | `90` | Added a 90-day retention period for expired project buckets |
+| `EnableExternalHangfire` | `true` | Not present | Removed; external Hangfire is now always enabled |
+
+Use the v3.3.4 `.env.example` as the definitive reference for the final configuration.
+
+## Reset the required Docker volumes
+
+The upgrade introduces changes to the Process Models and Vault paths.
+
+- The Vault volumes must be reset because the Vault paths have changed.
+- The Process Model-related volumes must be reset because the files have been updated.
+<Callout type="warning">
+Resetting the Process Model volumes will alsoreset your DMN rules. Make a back up of your existing DMN rules and values before you start. 
+</Callout>
+First, list your Docker volumes to verify the names:
+
+```bash
+docker volume ls
+```
+
+Remove the Vault volumes:
+
+```bash
+docker volume rm vault_data vault_logs
+```
+
+Remove the Process Model-related volumes:
+
+```bash
+docker volume rm tre_elastic tre_tre_process_models tre_zeebe
+```
+
+<Callout type="warning">
+These commands remove the specified volumes and their contents. Verify the volume names and back up any data that must be retained before proceeding. If your deployment uses different volume names, substitute the correct names.
+</Callout>
+
+### Set up Vault again
+
+After removing the Vault volumes, follow Section 3.3, **Set up Vault for secret management**, in the [TRE deployment guide](/guides/manage-tre/deployment-steps#configure-the-stack).
+
+Once Vault has been configured again, restart the stack to recreate the required volumes and start the services:
+
+```bash
+docker compose up -d
+```
+
+Refer to the [deployment guide](/guides/manage-tre/deployment-steps) for further instructions on configuring the stack.
+
+## Reconnect the TRE to the Data Egress and Submission Layers
+
+Resetting Vault means that credentials and onboarding configuration stored in Vault need to be restored.
+
+#### Re-enter the Data Egress credentials
+
+Follow the [Connect a TRE to the Data Egress Layer](/guides/manage-tre/connect-egress) guide to enter your Data Egress credentials again.
+
+<Callout type="info">
+If you already have these credentials ready, you only need to re-enter them in the TRE UI, [Step 2.1 of the guide.](/guides/manage-tre/connect-egress#setup-the-connection-between-tre-and-egress) 
+</Callout>
+
+#### Submission Layer configuration
+
+The following environment variables are required to connect to the Submission Layer:
+
+| Environment variable | Purpose |
+| --- | --- |
+| `SubmissionS3ApiUrl` | URL of the Submission Layer S3 server used by the TRE Agent. |
+| `SUBMISSION_KEYCLOAK_URL` | URL of the Submission Layer's Keycloak server. |
+| `SubmissionAPIAddressURL` | Address URL of the Submission API. |
+| `SubmissionAPIKeyCloakSecret` | OpenID secret for the Submission API Keycloak client. |
+
+<Callout type="info">
+Contact the Federated Analytics team to obtain the appropriate values for your deployment. These settings depend on your Submission Layer configuration and should be provided by the team before you proceed.
+</Callout>
+
+Update your `.env` file with the supplied values before moving on the Submission Layer onboarding process.
+
+#### Re-upload the TRE onboarding JSON
+
+Follow the [Connect a TRE Agent to a Submission Layer](/guides/manage-tre/connect-submission) guide to complete the onboarding process.
+Once all the health checks are passing, and you have uploaded the onboarding JSON the TRE will automatically synchronise with the Submission Layer.
+
+**If synchronisation does not work as expected, refer to the [Synchronisation and Health Checks](/guides/manage-tre/connect-submission#synchronisation) section.**
+
+<Callout type="info">
+When upgrading from the same major version (3.x) you need to upload your TRE onboarding JSON again, because the Vault was reset in the previous ste. You may reuse the same JSON file from your previous deployment, provided it is still valid for your configuration.
+</Callout>
+
+## Verify the deployment
+
+After completing the upgrade, verify that:
+
+- The TRE services start successfully.
+- Vault is configured correctly.
+- The v3.3.4 configuration is being used.
+- The Data Egress credentials have been re-entered.
+- The TRE health checks and synchronisation processes are operating as expected.
+- The Onboarding JSON has been uploaded and your TRE is synchronised with the Submission Layer.
+
+**For troubleshooting and further setup information, refer to the [TRE deployment guide](/guides/manage-tre/deployment-steps) or get in touch with the Federated Analytics team.**
+
+</Steps>
