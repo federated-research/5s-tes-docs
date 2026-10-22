@@ -20,7 +20,7 @@ This guide covers the deployment configuration changes, required volume resets, 
 Before starting the upgrade:
 
 - Ensure you have access to the TRE deployment repository and its configuration files.
-- Review the [TRE deployment guide](https://docs.federated-analytics.ac.uk/guides/manage-tre/deployment-steps).
+- Review the [TRE deployment guide](/guides/manage-tre/deployment-steps).
 - Obtain any updated Submission Layer configuration values from the Federated Analytics team.
 
 <Callout type="warning">
@@ -31,7 +31,7 @@ This upgrade involves removing Docker volumes and recreating Vault. Removing a v
 
 ## Update the TRE deployment configuration
 
-Follow the [TRE deployment steps](https://docs.federated-analytics.ac.uk/guides/manage-tre/deployment-steps) to configure your TRE for v3.3.4.
+Follow the [TRE deployment steps](/guides/manage-tre/deployment-steps) to configure your TRE for v3.3.4.
 
 Update your `.env` file using [`DeploymentStack/TRE/.env.example`](https://github.com/SwanseaUniversityMedical/5S-TES-Deployment/blob/a8519e7cf73186893e53e9d5133b39d008843fbd/DeploymentStack/TRE/.env.example) from the target version as a reference.
 
