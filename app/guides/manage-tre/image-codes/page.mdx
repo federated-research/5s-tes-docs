@@ -1,0 +1,191 @@
+---
+docType: guide
+readingTime: PT15M
+audiences: tre-operator
+---
+
+import { Steps, Callout } from "nextra/components";
+import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
+
+<DocMetadata />
+
+# Using Image Codes
+
+An image code is a short name, such as `@sky-create`, that a researcher can write in a TES task instead of a full container image name.
+
+The TRE decides what that short name points at. This means a researcher does not need to know the exact name or version of your container images, and you stay in control of what actually runs. You can also attach environment variables to an image code, so a container is given only the settings it needs.
+
+This guide describes how a TRE Operator adds image codes and attaches environment variables to them.
+
+## Prerequisites
+
+### Knowledge
+
+- Be familiar with the **DMN Rules** page. See [Controlling TRE Data Access](/guides/manage-tre/control-tre-data-access).
+- Know which container images your [TES backend](/guides/manage-tre/tes-backend/tes-implementations) is able to pull.
+
+### Technical requirements
+
+- A deployed TRE Layer, with the TRE Agent and the Credentials service running.
+- A TRE Administrator account with the `dare-tre-admin` role. See **Add Keycloak User**.
+
+## How it works
+
+A researcher writes this in their TES task:
+
+```json
+"executors": [
+  { "image": "{{@sky-create}}" }
+]
+```
+
+When the TRE Agent picks the task up, it:
+
+1. Looks `@sky-create` up in the **Image Codes** table and replaces the placeholder with the real image.
+2. Adds any environment variables you attached to `@sky-create`.
+3. Sends the task on to the TES backend.
+
+Each executor is handled separately. An executor that does not use an image code is left as the researcher wrote it, and does not receive variables that belong to an image code.
+
+If an image code has no matching rule, the submission fails and nothing is run. This is deliberate, so that a mistyped code cannot quietly run the wrong container.
+
+## The two decision tables
+
+The **DMN Rules** page has a **Decision table** selector at the top. Use it to switch between the two tables.
+
+![DMN Rules screenshot](/images/tre-layer/DMNRules.png)
+
+| Table                     | What it is for                                                                                                  |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Environment Variables** | Values passed to the containers, including the short-lived credentials. This is the existing table.               |
+| **Image Codes**           | Maps an image code to the container image that should run.                                                        |
+
+## Add an image code
+
+<Steps>
+
+### Open the DMN Rules page
+
+Sign in to the TRE Layer UI with a TRE administrator account and go to **DMN Rules**.
+
+### Switch to the Image Codes table
+
+Choose **Image Codes** from the **Decision table** list.
+
+### Add the rule
+
+Select **Add New Rule** and fill in the fields.
+
+| Field           | Example value             | Notes                                                               |
+| --------------- | ------------------------- | ------------------------------------------------------------------- |
+| Input:project   | `-`                       | A dash means the rule applies to every project.                      |
+| Input:user      | `-`                       | A dash means the rule applies to every user.                         |
+| Input:imageCode | `"@sky-create"`           | In double quotes, all lowercase, and starting with `@`.              |
+| Output:image    | `"dare.sky-create:1.0.1"` | In double quotes. The image exactly as your TES backend would pull it. |
+
+Save the rule. Adding or editing a rule saves it and sends it to Zeebe in one step.
+
+### Check the rule is there
+
+Select **Refresh**. Your new rule should appear in the list.
+
+</Steps>
+
+To point a code at a different image later, edit the rule and change **Output:image**. Submissions made after the change use the new image.
+
+<Callout type="info">
+  To restrict a code to one project, put the project name in **Input:project** in
+  double quotes instead of a dash, for example `"NottinghamDemo"`. You can then
+  add a second rule for the same code and a different project.
+</Callout>
+
+## Give an image its own environment variables
+
+Variables are added in the **Environment Variables** table, not the Image Codes table. The **imageCode** column decides which executors receive the variable.
+
+<Steps>
+
+### Switch to the Environment Variables table
+
+Choose **Environment Variables** from the **Decision table** list.
+
+### Add or edit a rule
+
+Set **Output:imageCode** to the code or codes the variable belongs to.
+
+| Output:imageCode              | Which executors receive the variable       |
+| ----------------------------- | ------------------------------------------ |
+| `[]`                          | Every executor in the submission.           |
+| `["@sky-create"]`             | Only executors that use `@sky-create`.      |
+| `["@sky-create","@sky-run"]`  | Executors that use either code.             |
+
+The square brackets are required, even for a single code.
+
+</Steps>
+
+All existing rules have `[]`, so nothing changes until you start using the column.
+
+## Keep a value out of the table
+
+The DMN table is readable by anyone who can open the **DMN Rules** page, so it is not the place for a password or a key. Instead, store the value in Vault and point the rule at it.
+
+| Column            | Value                                        |
+| ----------------- | -------------------------------------------- |
+| Output:env        | `"SKY_RABBIT_PASSWORD"`                      |
+| Output:value      | `""`                                         |
+| Output:isSecret   | `"Y"`                                        |
+| Output:vaultPath  | `"secret/sky/rabbit"`                        |
+
+When the submission runs, the value is read from Vault and passed to the container. The rest of the row behaves as normal.
+
+Inside the Vault secret, name the field after the environment variable, so a field called `SKY_RABBIT_PASSWORD` at `secret/sky/rabbit`. If the secret holds exactly one field, that field is used whatever it is called.
+
+<Callout type="warning">
+  If a value cannot be read from Vault, the whole submission fails and no
+  variables are stored. This is intended: a container should not start with a
+  setting missing. Check the TRE Agent logs for the path and field name it
+  looked for.
+</Callout>
+
+## What the researcher writes
+
+Researchers use the code in place of the image name. Everything else about the task is unchanged.
+
+```json
+"executors": [
+  {
+    "image": "{{@sky-create}}",
+    "command": ["--setup"]
+  },
+  {
+    "image": "ubuntu:22.04",
+    "command": ["echo", "hello"]
+  }
+]
+```
+
+In this task the first executor is replaced with the real image and receives the variables attached to `@sky-create`. The second runs exactly as written and does not receive them.
+
+Researchers do not have to match the capitals you used. `{{@Sky-Create}}` finds the same rule as `{{@sky-create}}`. The rule itself must still be written in lowercase.
+
+## If something goes wrong
+
+| What you see                                               | Likely cause                                                        | What to do                                                                  |
+| ---------------------------------------------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Submission fails with "Could not resolve image code(s)"     | No rule matches the code, or the rule is not deployed.               | Check the spelling and capitals in the rule, then select **Deploy**.          |
+| A container starts but a setting is missing                | The variable's **imageCode** does not include the code being used.   | Check **Output:imageCode** on that rule.                                      |
+| Submission fails mentioning a secret that could not be read | The Vault path is wrong, or the field inside it is named differently. | Check **Output:vaultPath** and the field names in the secret.                 |
+| A deleted rule still applies                                | Deleting does not send the change to Zeebe.                          | Select **Deploy** after deleting.                                             |
+
+## Notices
+
+- Any text value in a rule must be inside double quotes, for example `"@sky-create"`. Values that refer to an input do not need quotes, for example `string(project)`. See the [Camunda DMN rule convention](https://docs.camunda.io/docs/components/modeler/feel/language-guide/feel-expressions-introduction/) for more detail.
+- Image codes must be written in lowercase in the rule.
+- The Image Codes table stops at the first matching rule, so put more specific rules, such as ones naming a project, above the general ones.
+- Adding and editing a rule sends the change to Zeebe straight away. **Deleting does not**, so select **Deploy** after deleting a rule.
+- The decision tables are kept on a storage volume that survives upgrades. On a TRE that was set up before image codes were introduced, the Image Codes table will not be there until the volume is recreated or the file is copied in.
+
+## What's next?
+
+- [Controlling TRE data access](/guides/manage-tre/control-tre-data-access)
+- [Review and approve outputs](/guides/egress-approval/approve-outputs)
