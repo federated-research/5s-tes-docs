@@ -1,0 +1,294 @@
+---
+docType: reference
+audiences: [tre-operator]
+---
+
+import { Callout } from "nextra/components";
+import { DocMetadata } from "@/components/doc-metadata/DocMetadata";
+
+<DocMetadata />
+
+# v2.x to v3.x
+
+All notable changes to **5S-TES** from version **3.0.0 onwards** are documented here.
+
+For the full release history, see the [5S-TES GitHub releases](https://github.com/SwanseaUniversityMedical/5s-Tes/releases).
+
+---
+
+## v3.3.4
+
+<small>30 September 2026</small>
+
+### Security
+
+- Fixed a security issue where the Zeebe gRPC channel used an unencrypted connection without client authentication.
+- Removed the affected configuration to address the security vulnerability.
+
+---
+
+## v3.3.3
+
+<small>29 September 2026</small>
+
+### Added
+
+- Added support for including `/tmp` in every TES task's volume configuration.
+
+### Changed
+
+- Updated the TRE Agent to automatically include `/tmp` in submitted TES tasks.
+- Preserved user-specified volumes and prevented duplicate `/tmp` entries.
+
+---
+
+## v3.3.2
+
+<small>22 September 2026</small>
+
+### Changed
+
+- Improved Submission API performance when retrieving submissions waiting for TRE processing.
+- Optimised retrieval of projects associated with a TRE.
+- Improved handling of submission cancellation requests.
+- Updated application configuration to support the performance improvements.
+
+### Fixed
+
+- Resolved issues contributing to **504 Gateway Timeout** errors.
+- Reduced memory usage during Submission API operations.
+
+---
+
+## v3.3.1
+
+<small>15 September 2026</small>
+
+### Added
+
+- Added support for submissions that do not contain output files.
+
+### Changed
+
+- Improved handling of submission workflows where no output files are produced.
+- Improved logging and consistency of application messages.
+
+---
+
+## v3.3.0
+
+<small>15 September 2026</small>
+
+### Added
+
+- Added **Teleport user management**.
+- Added support for creating and managing Teleport projects.
+- Added LDAP configuration for Teleport user management.
+- Added support for configuring the LDAP organisational-unit path.
+- Added a dedicated Teleport user-management client.
+
+### Changed
+
+- Updated project discovery and project selection.
+- Changed approval checks to operate on approved users rather than approved projects.
+- Updated API endpoints and configuration to support Teleport user management.
+- Improved LDAP service lifetime and dependency management.
+- Improved Hangfire job handling to prevent unnecessary retries.
+
+### Security
+
+- Added security improvements to user management and authentication workflows.
+
+---
+
+## v3.2.7
+
+<small>15 September 2026</small>
+
+### Changed
+
+- Replaced the archived **MinIO `mc` CLI** with the **RustFS CLI** in the container build.
+- Updated container configuration to use RustFS tooling for object-storage operations.
+
+---
+
+## v3.2.6
+
+<small>10 September 2026</small>
+
+### Added
+
+- Added support for **ephemeral, per-submission S3/RustFS credentials**.
+
+### Changed
+
+- Updated storage helpers to use temporary credentials for individual submissions.
+- Improved isolation between submissions when accessing object storage.
+
+---
+
+## v3.2.5
+
+<small>10 September 2026</small>
+
+### Added
+
+- Added automatic cleanup of S3 buckets when projects expire.
+- Added background processing for expired-project bucket cleanup.
+
+### Changed
+
+- Added additional logging around project storage cleanup.
+
+---
+
+## v3.2.4
+
+<small>10 September 2026</small>
+
+### Fixed
+
+- Fixed an issue causing the **Agent UI to enter a redirect loop** after logging out and subsequently logging back in.
+
+---
+
+## v3.2.3
+
+<small>27 August 2026</small>
+
+### Changed
+
+- Improved **TRE logging**.
+- Added more detailed visibility of TRE processing stages.
+- Improved diagnostic information available when investigating submission-processing issues.
+
+---
+
+## v3.2.2
+
+<small>25 August 2026</small>
+
+### Added
+
+- Added a Submission API endpoint for retrieving **project S3 information**.
+
+---
+
+## v3.2.1
+
+<small>21 August 2026</small>
+
+### Added
+
+- Added **per-product health-check status tables**.
+
+### Changed
+
+- Improved the health-check status interface.
+- Updated the status table layout and associated view logic.
+
+---
+
+## v3.2.0
+
+<small>18 August 2026</small>
+
+### Changed
+
+- Downgraded Camunda to version 8.2.
+- Removed the production dependency on the commercial Camunda Operate and Connectors services.
+- Updated credential workflows to use Zeebe directly.
+- Improved Zeebe startup, deployment and retry handling.
+- Removed unused dependencies and configuration.
+
+---
+
+## v3.1.1
+
+<small>5 August 2026</small>
+
+### Added
+
+- Added links to child S3 paths to make it easier to access child submission data.
+
+---
+
+## v3.1.0
+
+<small>5 August 2026</small>
+
+### Added
+
+- Added per-project scoped S3 credentials for TRE Submission Layer access.
+- Improved the handling of project-specific access to S3 resources.
+
+---
+
+## v3.0.1
+
+<small>14 July 2026</small>
+
+### Changed
+
+- Changed the Keycloak realm for service accounts to `Dare-Control`.
+
+---
+
+## v3.0.0
+
+<small>10 July 2026 · Major release</small>
+
+<Callout type="info">
+This release introduced significant improvements to TRE deployment, onboarding, security, configuration and monitoring.
+</Callout>
+
+### TRE onboarding and deployment
+
+- Added TRE deployment functionality.
+- Added automatic creation of a Keycloak service account when onboarding a TRE.
+- Added the ability for TRE administrators to download a generated onboarding configuration.
+- Added onboarding APIs for securely retrieving TRE credentials.
+- Added service-account role assignment during onboarding.
+- Added support for uploading TRE onboarding configuration through the UI.
+
+### Security and credentials
+
+- Added HashiCorp Vault integration to Submission Layer for storing sensitive credentials.
+- Moved submission credentials from the database to Vault.
+- Moved egress credentials to Vault.
+- Added Vault-backed configuration for TRE deployment.
+- Added support for retrieving Keycloak configuration through the discovery URL.
+
+### Health monitoring
+
+- Added health monitoring for TRE, synchronisation and agent services.
+- Added a health-check status page and table.
+- Added filtering, sorting and pagination to health-check results.
+- Added the ability to revive stopped Hangfire jobs.
+- Health-check records older than 30 days can now be automatically removed.
+- Improved health-check reporting and status terminology.
+
+### Performance
+
+- Improved the performance of project, submission, TRE and user detail pages.
+- Improved the performance of the submission wizard.
+- Added DTOs for API responses to reduce unnecessary data retrieval.
+- Improved `GetAll` API calls and related UI performance.
+
+### Configuration and deployment
+
+- Migrated the application to .NET 10.
+- Improved Docker build configuration and CI workflows.
+- Improved Camunda container builds.
+- Migrated container signing workflows from Cosign to Notation.
+- Improved application configuration and feature-flag handling.
+- Improved support for demo and seeded data.
+
+### UI
+
+- Added a Deployment Admin page.
+- Improved TRE configuration and credential pages.
+- Added additional feedback when configuring submission credentials.
+- Improved health-check presentation.
+- Added S3 bucket paths to the Submission UI.
+- Updated application branding and metadata.
