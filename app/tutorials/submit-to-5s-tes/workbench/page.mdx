@@ -195,7 +195,10 @@ Executes a SQL query against a PostgreSQL database using the default image `harb
 | name | Yes | Task name |
 | query | Yes | SQL query to execute |
 
+
 **Example Implementation**
+
+The following example queries the `NottinghamDemo` schema. For your own project, the schema name will be specific to your project and TRE configuration. Your project's TRE page has a button to download a list containing the names and descriptions of the environment variables available to you. The list will include the names of your desired schemas and permissions.
 
 ```python copy
 query = (
